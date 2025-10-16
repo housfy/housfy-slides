@@ -580,47 +580,8 @@
         </div>
       </div>
 
-      <!-- Slide 6: CIFR Resultado -->
-      <div class="slide slide-code" data-slide="6">
-        <h2 class="slide-title">✨ Resultado del prompt CIFR</h2>
-        <div class="step">
-          <pre>
-<span class="code-comment">// Tipos bien definidos</span>
-<span class="code-keyword">interface</span> User {
-  id: string;
-  email: string;
-  notificationsEnabled: boolean;
-}
-
-<span class="code-keyword">async function</span> sendNotifications(users: User[]) {
-  <span class="code-comment">// Filtrar usuarios con notificaciones activadas</span>
-  <span class="code-keyword">const</span> eligibleUsers = users.filter(
-    u => u.notificationsEnabled
-  );
-  
-  console.log(<span class="code-string">`Enviando a ${eligibleUsers.length} usuarios`</span>);
-  
-  <span class="code-keyword">for</span> (<span class="code-keyword">const</span> user <span class="code-keyword">of</span> eligibleUsers) {
-    <span class="code-keyword">try</span> {
-      <span class="code-keyword">await</span> emailService.send(user.email);
-      console.log(<span class="code-string">`✅ Enviado a ${user.email}`</span>);
-    } <span class="code-keyword">catch</span> (error) {
-      console.error(<span class="code-string">`❌ Error con ${user.email}:`, error);
-      <span class="code-comment">// Continúa con el siguiente</span>
-    }
-  }
-}</pre>
-        </div>
-        <div class="step">
-          <div class="explanation">
-            🎯 <strong>Perfecto en el primer intento:</strong> Tipos,
-            filtrado, manejo de errores, logging... todo lo que pedimos.
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 7: BEAR Framework -->
-      <div class="slide slide-two-columns" data-slide="7">
+      <!-- Slide 6: BEAR Framework -->
+      <div class="slide slide-two-columns" data-slide="6">
         <h2 class="slide-title">🐻 BEAR Framework</h2>
         <div class="columns">
           <div class="step column">
@@ -646,8 +607,8 @@
         </div>
       </div>
 
-      <!-- Slide 8: BEAR Ejemplo -->
-      <div class="slide slide-example" data-slide="8">
+      <!-- Slide 7: BEAR Ejemplo -->
+      <div class="slide slide-example" data-slide="7">
         <h2 class="slide-title">🐻 BEAR - Ejemplo real</h2>
         <div class="step">
           <div class="example-box">
@@ -687,50 +648,8 @@
         </div>
       </div>
 
-      <!-- Slide 9: BEAR Resultado -->
-      <div class="slide slide-code" data-slide="9">
-        <h2 class="slide-title">✨ Resultado del prompt BEAR</h2>
-        <div class="step">
-          <pre>
-<span class="code-comment">// Transformación automática JSON → TypeScript</span>
-<span class="code-keyword">class</span> FeatureConfig {
-  @IsString()
-  feature: string;
-  
-  @IsBoolean()
-  enabled: boolean;
-  
-  @ValidateNested()
-  config: {
-    email: boolean;
-  };
-  
-  <span class="code-keyword">constructor</span>(json: any) {
-    this.feature = json.feature;
-    this.enabled = json.enabled;
-    this.config = json.config;
-    this.validate();
-  }
-  
-  <span class="code-keyword">private</span> validate() {
-    <span class="code-keyword">const</span> errors = validateSync(this);
-    <span class="code-keyword">if</span> (errors.length > 0) {
-      <span class="code-keyword">throw new</span> Error(<span class="code-string">`Invalid config: ${errors}`</span>);
-    }
-  }
-}</pre>
-        </div>
-        <div class="step">
-          <div class="explanation">
-            🐻 <strong>Con un ejemplo claro:</strong> La IA entendió
-            perfectamente el patrón y generó la estructura completa con
-            validaciones.
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 10: Herramientas Cursor - Intro -->
-      <div class="slide slide-content" data-slide="10">
+      <!-- Slide 8: Herramientas Cursor - Intro -->
+      <div class="slide slide-content" data-slide="8">
         <h2 class="slide-title">🔧 Herramientas de Cursor</h2>
         <div class="content">
           <div class="step">
@@ -757,15 +676,15 @@
         </div>
       </div>
 
-      <!-- Slide 11: Agent -->
-      <div class="slide slide-tool" data-slide="11">
+      <!-- Slide 9: Agent -->
+      <div class="slide slide-tool" data-slide="9">
         <h2 class="slide-title">🤖 Agent de Cursor</h2>
         <div class="step">
           <span class="tool-icon">🤖</span>
           <p class="tool-description">
             <strong>¿Qué es?</strong> Un asistente autónomo que puede leer
-            archivos, hacer cambios, ejecutar comandos y razonar sobre tu
-            código sin supervisión constante.
+            archivos, hacer cambios, ejecutar comandos y razonar sobre tu código
+            sin supervisión constante.
           </p>
         </div>
         <div class="step">
@@ -800,14 +719,14 @@
         </div>
       </div>
 
-      <!-- Slide 12: Background Agent -->
-      <div class="slide slide-tool" data-slide="12">
+      <!-- Slide 10: Background Agent -->
+      <div class="slide slide-tool" data-slide="10">
         <h2 class="slide-title">🌍 Background Agent (Web)</h2>
         <div class="step">
           <span class="tool-icon">🌐</span>
           <p class="tool-description">
-            <strong>El superpoder:</strong> El Agent puede buscar en internet
-            en tiempo real para traer información actualizada, documentación de
+            <strong>El superpoder:</strong> El Agent puede buscar en internet en
+            tiempo real para traer información actualizada, documentación de
             librerías, y soluciones a problemas específicos.
           </p>
         </div>
@@ -828,8 +747,8 @@
                 actuales
               </li>
               <li>
-                <strong>Librerías nuevas:</strong> Aprende sobre paquetes que
-                no conoce
+                <strong>Librerías nuevas:</strong> Aprende sobre paquetes que no
+                conoce
               </li>
             </ul>
           </div>
@@ -842,8 +761,8 @@
         </div>
       </div>
 
-      <!-- Slide 13: Plan Mode -->
-      <div class="slide slide-tool" data-slide="13">
+      <!-- Slide 11: Plan Mode -->
+      <div class="slide slide-tool" data-slide="11">
         <h2 class="slide-title">📊 Plan Mode</h2>
         <div class="step">
           <span class="tool-icon">📋</span>
@@ -869,8 +788,8 @@
                 <strong>Aprendizaje:</strong> Entiendes la estrategia del Agent
               </li>
               <li>
-                <strong>Seguridad:</strong> Evitas cambios no deseados en
-                tareas críticas
+                <strong>Seguridad:</strong> Evitas cambios no deseados en tareas
+                críticas
               </li>
             </ul>
           </div>
@@ -883,8 +802,8 @@
         </div>
       </div>
 
-      <!-- Slide 14: Multiple Agent -->
-      <div class="slide slide-tool" data-slide="14">
+      <!-- Slide 12: Multiple Agent -->
+      <div class="slide slide-tool" data-slide="12">
         <h2 class="slide-title">👥 Multiple-agent</h2>
         <div class="step">
           <span class="tool-icon">🎭</span>
@@ -901,12 +820,8 @@
               <li>
                 <strong>Agent 1:</strong> Refactoriza el backend mientras...
               </li>
-              <li>
-                <strong>Agent 2:</strong> Actualiza los tests y...
-              </li>
-              <li>
-                <strong>Agent 3:</strong> Genera documentación
-              </li>
+              <li><strong>Agent 2:</strong> Actualiza los tests y...</li>
+              <li><strong>Agent 3:</strong> Genera documentación</li>
               <li>
                 <strong>Resultado:</strong> 3 tareas terminadas en el tiempo de
                 1
@@ -923,8 +838,8 @@
         </div>
       </div>
 
-      <!-- Slide 15: Allowlist -->
-      <div class="slide slide-tool" data-slide="15">
+      <!-- Slide 13: Allowlist -->
+      <div class="slide slide-tool" data-slide="13">
         <h2 class="slide-title">🛡️ Allowlist</h2>
         <div class="step">
           <span class="tool-icon">🔐</span>
@@ -964,8 +879,8 @@
         </div>
       </div>
 
-      <!-- Slide 16: Cursor Rules - Intro -->
-      <div class="slide slide-content" data-slide="16">
+      <!-- Slide 14: Cursor Rules - Intro -->
+      <div class="slide slide-content" data-slide="14">
         <h2 class="slide-title">📏 Cursor Rules</h2>
         <div class="content">
           <div class="step">
@@ -995,8 +910,8 @@
         </div>
       </div>
 
-      <!-- Slide 17: Cursor Rules - Guidelines -->
-      <div class="slide slide-code" data-slide="17">
+      <!-- Slide 15: Cursor Rules - Guidelines -->
+      <div class="slide slide-code" data-slide="15">
         <h2 class="slide-title">📚 Cursor Rules: Guidelines</h2>
         <div class="step">
           <pre>
@@ -1030,8 +945,8 @@
         </div>
       </div>
 
-      <!-- Slide 18: Cursor Rules - Prompts -->
-      <div class="slide slide-code" data-slide="18">
+      <!-- Slide 16: Cursor Rules - Prompts -->
+      <div class="slide slide-code" data-slide="16">
         <h2 class="slide-title">🎯 Cursor Rules: Prompts</h2>
         <div class="step">
           <pre>
@@ -1063,8 +978,8 @@ DB_PASSWORD=root
         </div>
       </div>
 
-      <!-- Slide 19: MCPs Intro -->
-      <div class="slide slide-content" data-slide="19">
+      <!-- Slide 17: MCPs Intro -->
+      <div class="slide slide-content" data-slide="17">
         <h2 class="slide-title">📂 MCPs - Model Context Protocol</h2>
         <div class="content">
           <div class="step">
@@ -1097,15 +1012,15 @@ DB_PASSWORD=root
         </div>
       </div>
 
-      <!-- Slide 20: MCP Browser -->
-      <div class="slide slide-tool" data-slide="20">
+      <!-- Slide 18: MCP Browser -->
+      <div class="slide slide-tool" data-slide="18">
         <h2 class="slide-title">🌐 MCP: Browser</h2>
         <div class="step">
           <span class="tool-icon">🌐</span>
           <p class="tool-description">
-            <strong>Ya integrado en Cursor:</strong> El Agent puede controlar
-            un browser headless, navegar páginas web, llenar formularios,
-            scrappear datos...
+            <strong>Ya integrado en Cursor:</strong> El Agent puede controlar un
+            browser headless, navegar páginas web, llenar formularios, scrappear
+            datos...
           </p>
         </div>
         <div class="step">
@@ -1140,8 +1055,8 @@ DB_PASSWORD=root
         </div>
       </div>
 
-      <!-- Slide 21: MCPs Externos -->
-      <div class="slide slide-list-icons" data-slide="21">
+      <!-- Slide 19: MCPs Externos -->
+      <div class="slide slide-list-icons" data-slide="19">
         <h2 class="slide-title">🔌 MCPs: Conecta cualquiera</h2>
         <div class="content">
           <div class="step icon-item">
@@ -1176,8 +1091,8 @@ DB_PASSWORD=root
         </div>
       </div>
 
-      <!-- Slide 22: MCP Custom para Developers -->
-      <div class="slide slide-example" data-slide="22">
+      <!-- Slide 20: MCP Custom para Developers -->
+      <div class="slide slide-example" data-slide="20">
         <h2 class="slide-title">🛠️ MCP Custom para Developers</h2>
         <div class="step">
           <div class="example-box">
@@ -1215,8 +1130,8 @@ DB_PASSWORD=root
         </div>
       </div>
 
-      <!-- Slide 23: MCP Custom - Ejemplo técnico -->
-      <div class="slide slide-code" data-slide="23">
+      <!-- Slide 21: MCP Custom - Ejemplo técnico -->
+      <div class="slide slide-code" data-slide="21">
         <h2 class="slide-title">🔧 MCP Custom: Código base</h2>
         <div class="step">
           <pre>
@@ -1255,8 +1170,8 @@ server.start();</pre>
         </div>
       </div>
 
-      <!-- Slide 24: Codex -->
-      <div class="slide slide-tool" data-slide="24">
+      <!-- Slide 22: Codex -->
+      <div class="slide slide-tool" data-slide="22">
         <h2 class="slide-title">📝 Codex (ChatGPT)</h2>
         <div class="step">
           <span class="tool-icon">📚</span>
@@ -1298,8 +1213,8 @@ server.start();</pre>
         </div>
       </div>
 
-      <!-- Slide 25: Codex - Ejemplo uso -->
-      <div class="slide slide-example" data-slide="25">
+      <!-- Slide 23: Codex - Ejemplo uso -->
+      <div class="slide slide-example" data-slide="23">
         <h2 class="slide-title">📚 Codex - Casos de uso</h2>
         <div class="step">
           <div class="example-box">
@@ -1333,8 +1248,8 @@ server.start();</pre>
         </div>
       </div>
 
-      <!-- Slide 26: Recap -->
-      <div class="slide slide-content" data-slide="26">
+      <!-- Slide 24: Recap -->
+      <div class="slide slide-content" data-slide="24">
         <h2 class="slide-title">📋 Recap: Lo que hemos visto</h2>
         <div class="content">
           <div class="step">
@@ -1365,8 +1280,8 @@ server.start();</pre>
         </div>
       </div>
 
-      <!-- Slide 27: Final Motivacional -->
-      <div class="slide slide-final" data-slide="27">
+      <!-- Slide 25: Final Motivacional -->
+      <div class="slide slide-final" data-slide="25">
         <div class="step visible">
           <span class="final-emoji">💬</span>
         </div>
@@ -1393,7 +1308,7 @@ server.start();</pre>
 
     <!-- Contador -->
     <div class="slide-counter">
-      <span id="current-slide">1</span> / <span id="total-slides">27</span>
+      <span id="current-slide">1</span> / <span id="total-slides">25</span>
     </div>
 
     <script>
@@ -1516,4 +1431,3 @@ server.start();</pre>
     </script>
   </body>
 </html>
-

@@ -1,0 +1,15 @@
+- Cambiar los "Ejemplos Reales del Prompt" de los dos tipos
+  - Aplicarlo a Housfy
+- Agent de cursos
+  - Simplificar
+  - Añadir screenshot (ponerlas en asserts)
+- Background Agents
+  - Que puede hacer -> enfocat a housfy (casos us reals)
+    -Screenshots
+- Plan mode
+  - Screenshots (amb exemple real?)
+- Multiple agent
+  - Screenshots (amb exemple real?)
+- Las demás, revisarlas un poco
+
+- Añadir temporizador en la template (+ las ya existentes)
