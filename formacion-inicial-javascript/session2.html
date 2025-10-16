@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesión 2: Funciones y scope</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #11aefa;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #0d8bc7;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      .slide-cover {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 4.5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      .slide-content {
+        background: white;
+      }
+
+      .slide-content .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 1.4em;
+        line-height: 1.6;
+      }
+
+      .slide-content .content p {
+        margin-bottom: 15px;
+      }
+
+      .slide-content .content ul {
+        margin-left: 30px;
+        list-style-type: none;
+      }
+
+      .slide-content .content ul li {
+        margin-bottom: 15px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .slide-content .content ul li:before {
+        content: "✅";
+        position: absolute;
+        left: -10px;
+      }
+
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        border-left: 4px solid #8b5cf6;
+      }
+
+      .slide-table {
+        background: white;
+      }
+
+      .slide-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 1.3em;
+      }
+
+      .slide-table th {
+        background: #8b5cf6;
+        color: white;
+        padding: 20px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      .slide-table td {
+        padding: 20px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .slide-table tr:hover {
+        background: #f8f9fa;
+      }
+
+      .slide-exercise {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+
+      .slide-exercise .slide-title {
+        color: white;
+      }
+
+      .slide-exercise .exercise-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.3em;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-exercise pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
+        overflow-x: auto;
+      }
+
+      .slide-solution {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .slide-solution .slide-title {
+        color: white;
+      }
+
+      .slide-solution pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 1.1em;
+        line-height: 1.5;
+        overflow-x: auto;
+      }
+
+      .slide-summary {
+        background: #8b5cf6;
+      }
+
+      .slide-summary .slide-title {
+        color: white;
+      }
+
+      .slide-summary .summary-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        font-size: 1.4em;
+      }
+
+      .slide-summary .summary-box h3 {
+        color: #8b5cf6;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+      }
+
+      .slide-summary .summary-box ul {
+        list-style: none;
+      }
+
+      .slide-summary .summary-box li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-summary .summary-box li:before {
+        content: "✅";
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🛠️ SESIÓN 2</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Funciones y scope</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: ¿Qué es una función? -->
+      <div class="slide slide-code" data-slide="2">
+        <h2 class="slide-title">🎯 ¿Qué es una función?</h2>
+        <div class="step">
+          <div class="explanation">
+            <strong>Definición simple:</strong> Una "receta" que puedes
+            reutilizar
+          </div>
+        </div>
+        <div class="step">
+          <pre>
+// Sin función (repetitivo)
+const precio1ConIVA = 100 * 1.21;
+const precio2ConIVA = 50 * 1.21;
+const precio3ConIVA = 200 * 1.21;
+
+// Con función (reutilizable)
+function calcularConIVA(precio) {
+  return precio * 1.21;
+}
+
+const precio1ConIVA = calcularConIVA(100);
+const precio2ConIVA = calcularConIVA(50);
+const precio3ConIVA = calcularConIVA(200);</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 3: Anatomía de una función -->
+      <div class="slide slide-code" data-slide="3">
+        <h2 class="slide-title">🔬 Anatomía de una función</h2>
+        <div class="step">
+          <pre>
+function nombreFuncion(parametro1, parametro2) {
+  // Código que hace cosas
+  const resultado = parametro1 + parametro2;
+  return resultado;
+}
+
+// Usar la función
+const suma = nombreFuncion(5, 3); // suma = 8</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Partes:</strong><br />
+            • <code>function</code> = palabra clave<br />
+            • <code>nombreFuncion</code> = nombre descriptivo<br />
+            • <code>(parametros)</code> = datos que recibe<br />
+            • <code>return</code> = resultado que devuelve
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Funciones flecha -->
+      <div class="slide slide-code" data-slide="4">
+        <h2 class="slide-title">➡️ Funciones flecha (arrow functions)</h2>
+        <div class="step">
+          <pre>
+// Función tradicional
+function sumar(a, b) {
+  return a + b;
+}
+
+// Función flecha (moderna)
+const sumar = (a, b) => {
+  return a + b;
+};
+
+// Función flecha corta (sin llaves ni return)
+const sumar = (a, b) => a + b;
+
+// Si solo hay 1 parámetro, puedes omitir paréntesis
+const duplicar = x => x * 2;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>En n8n:</strong> Verás mucho las funciones flecha en
+            ejemplos
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Comparación de estilos -->
+      <div class="slide slide-table" data-slide="5">
+        <h2 class="slide-title">📊 Comparación de estilos</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Tradicional</th>
+                <th>Flecha</th>
+                <th>Flecha corta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>function suma(a,b) { return a+b; }</code></td>
+                <td><code>const suma = (a,b) => { return a+b; }</code></td>
+                <td><code>const suma = (a,b) => a+b;</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="step">
+          <div style="margin-top: 30px; font-size: 1.3em">
+            <strong>¿Cuál usar?</strong><br />
+            • Ambas funcionan igual en n8n<br />
+            • Flecha corta es más legible para funciones simples<br />
+            • Tradicional es más clara si eres principiante
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Parámetros con valores por defecto -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">🎛️ Parámetros y valores por defecto</h2>
+        <div class="step">
+          <pre>
+// Sin valor por defecto
+const saludar = (nombre) => {
+  return `Hola ${nombre}`;
+};
+saludar(); // "Hola undefined" ❌
+
+// Con valor por defecto
+const saludar = (nombre = "Usuario") => {
+  return `Hola ${nombre}`;
+};
+saludar();           // "Hola Usuario" ✅
+saludar("María");    // "Hola María" ✅</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 7: Múltiples parámetros -->
+      <div class="slide slide-code" data-slide="7">
+        <h2 class="slide-title">🔢 Múltiples parámetros</h2>
+        <div class="step">
+          <pre>
+// Calcular precio final con descuento e IVA
+const calcularPrecioFinal = (precioBase, descuento, iva) => {
+  const conDescuento = precioBase - descuento;
+  const conIVA = conDescuento * (1 + iva);
+  return conIVA;
+};
+
+const precioFinal = calcularPrecioFinal(100, 20, 0.21);
+// 100 - 20 = 80
+// 80 * 1.21 = 96.8</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 8: Return múltiple -->
+      <div class="slide slide-code" data-slide="8">
+        <h2 class="slide-title">📦 Return múltiple (objeto)</h2>
+        <div class="step">
+          <pre>
+// Devolver varios valores
+const analizarPedido = (total) => {
+  const iva = total * 0.21;
+  const sinIVA = total - iva;
+  
+  return {
+    total: total,
+    iva: iva,
+    sinIVA: sinIVA
+  };
+};
+
+const resultado = analizarPedido(121);
+// { total: 121, iva: 25.41, sinIVA: 95.59 }</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 9: Scope -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">🎯 Scope (alcance de variables)</h2>
+        <div class="step">
+          <pre>
+const global = "Soy global"; // ✅ Accesible en todas partes
+
+function miFuncion() {
+  const local = "Soy local"; // ✅ Solo existe aquí dentro
+  console.log(global);  // ✅ Funciona
+  console.log(local);   // ✅ Funciona
+}
+
+console.log(global);    // ✅ Funciona
+console.log(local);     // ❌ ERROR: local no existe aquí</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla:</strong> Las variables declaradas dentro de una
+            función solo existen ahí
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 10: Ejercicio 1 -->
+      <div class="slide slide-exercise" data-slide="10">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 1</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <p><strong>Crear función validadora de emails</strong></p>
+            <pre>
+// TU MISIÓN:
+// Crear una función que reciba un email
+// y devuelva true si contiene "@" y ".", false si no
+
+// Pista: usa el método .includes()
+// "hola@test.com".includes("@") // true
+
+// Ejemplos:
+// validarEmail("usuario@test.com") → true
+// validarEmail("invalido.com") → false
+// validarEmail("sin-arroba.es") → false</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 11: Solución 1 -->
+      <div class="slide slide-solution" data-slide="11">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 1</h2>
+        <div class="step">
+          <pre>
+const validarEmail = (email) => {
+  const tieneArroba = email.includes("@");
+  const tienePunto = email.includes(".");
+  
+  return tieneArroba && tienePunto;
+};
+
+// Versión corta
+const validarEmail = (email) => {
+  return email.includes("@") && email.includes(".");
+};
+
+// Versión ultra-corta
+const validarEmail = email => email.includes("@") && email.includes(".");
+
+// Pruebas
+console.log(validarEmail("usuario@test.com")); // true
+console.log(validarEmail("invalido.com"));      // false</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 12: Ejercicio 2 -->
+      <div class="slide slide-exercise" data-slide="12">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 2 (n8n real)</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <p><strong>Caso:</strong> Filtrar contactos válidos</p>
+            <pre>
+// INPUT en n8n: Lista de contactos
+const contactos = [
+  { nombre: "Ana", email: "ana@test.com" },
+  { nombre: "Luis", email: "sin-arroba.com" },
+  { nombre: "María", email: "maria@empresa.es" },
+  { nombre: "Pedro", email: "" }
+];
+
+// TU MISIÓN:
+// 1. Crear función validarEmail (del ejercicio anterior)
+// 2. Filtrar solo contactos con email válido
+// 3. Devolver array con contactos válidos</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 13: Solución 2 -->
+      <div class="slide slide-solution" data-slide="13">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 2</h2>
+        <div class="step">
+          <pre>
+// Función validadora
+const validarEmail = email => email.includes("@") && email.includes(".");
+
+// Filtrar contactos
+const contactosValidos = [];
+
+for (let i = 0; i < contactos.length; i++) {
+  const contacto = contactos[i];
+  if (validarEmail(contacto.email)) {
+    contactosValidos.push(contacto);
+  }
+}
+
+return contactosValidos;
+// Resultado: [
+//   { nombre: "Ana", email: "ana@test.com" },
+//   { nombre: "María", email: "maria@empresa.es" }
+// ]</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 14: Closures -->
+      <div class="slide slide-code" data-slide="14">
+        <h2 class="slide-title">🔒 Closures (nivel básico)</h2>
+        <div class="step">
+          <pre>
+// Una función que crea otra función
+const crearSaludador = (saludo) => {
+  return (nombre) => {
+    return `${saludo}, ${nombre}`;
+  };
+};
+
+const saludoFormal = crearSaludador("Buenos días");
+const saludoInformal = crearSaludador("Hola");
+
+console.log(saludoFormal("Sr. López"));   // "Buenos días, Sr. López"
+console.log(saludoInformal("María"));     // "Hola, María"</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Útil en n8n:</strong> Para crear funciones personalizadas
+            según contexto
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 15: Funciones como parámetros -->
+      <div class="slide slide-code" data-slide="15">
+        <h2 class="slide-title">🎭 Funciones como parámetros</h2>
+        <div class="step">
+          <pre>
+// Función que recibe otra función
+const aplicarOperacion = (numero, operacion) => {
+  return operacion(numero);
+};
+
+const duplicar = x => x * 2;
+const triplicar = x => x * 3;
+
+console.log(aplicarOperacion(5, duplicar));   // 10
+console.log(aplicarOperacion(5, triplicar));  // 15</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Preview:</strong> Esto es la base de <code>.map()</code>,
+            <code>.filter()</code> (próxima sesión)
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 16: Resumen -->
+      <div class="slide slide-summary" data-slide="16">
+        <h2 class="slide-title">📝 Resumen Sesión 2</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Crear funciones (tradicionales y flecha)</li>
+              <li>Parámetros y return</li>
+              <li>Scope (alcance de variables)</li>
+              <li>Reutilizar código eficientemente</li>
+              <li>Validar datos en n8n</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> Arrays y objetos a fondo (map,
+              filter, reduce) 🚀
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">16</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>

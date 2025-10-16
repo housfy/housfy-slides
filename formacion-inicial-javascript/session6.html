@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesión 6: Integración total con n8n</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        overflow-y: auto;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #11aefa;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #0d8bc7;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      .slide-cover {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 4.5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      .slide-content {
+        background: white;
+      }
+
+      .slide-content .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 1.4em;
+        line-height: 1.6;
+      }
+
+      .slide-content ul {
+        list-style-type: none;
+        margin-left: 20px;
+      }
+
+      .slide-content ul li {
+        margin-bottom: 15px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .slide-content ul li:before {
+        content: "✅";
+        position: absolute;
+        left: -10px;
+      }
+
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 0.95em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        border-left: 4px solid #6366f1;
+      }
+
+      .slide-table {
+        background: white;
+      }
+
+      .slide-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+
+      .slide-table th {
+        background: #6366f1;
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+      }
+
+      .slide-table td {
+        padding: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .slide-project {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      }
+
+      .slide-project .slide-title {
+        color: white;
+      }
+
+      .slide-project .project-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-project pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
+        overflow-x: auto;
+        font-size: 0.9em;
+      }
+
+      .slide-final {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-final .slide-title {
+        color: white;
+        font-size: 5em;
+        margin-bottom: 40px;
+      }
+
+      .slide-final .final-content {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        max-width: 80%;
+      }
+
+      .slide-final .final-content h3 {
+        color: #10b981;
+        font-size: 2em;
+        margin-bottom: 30px;
+      }
+
+      .slide-final .final-content p {
+        font-size: 1.6em;
+        line-height: 1.8;
+        margin-bottom: 20px;
+      }
+
+      .slide-final .final-content ul {
+        list-style: none;
+        font-size: 1.4em;
+        text-align: left;
+      }
+
+      .slide-final .final-content li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-final .final-content li:before {
+        content: "✅";
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🚀 SESIÓN 6</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Integración total con n8n</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: Repaso -->
+      <div class="slide slide-content" data-slide="2">
+        <h2 class="slide-title">🎯 Todo lo que has aprendido, aplicado</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>Repaso express:</strong></p>
+            <ul>
+              <li>Sesión 1: Tipos de datos, variables</li>
+              <li>Sesión 2: Funciones</li>
+              <li>Sesión 3: Arrays y objetos (.map, .filter, .reduce)</li>
+              <li>Sesión 4: Control de flujo (if, bucles, try/catch)</li>
+              <li>Sesión 5: Buenas prácticas, fechas, JSON</li>
+            </ul>
+          </div>
+          <div class="step">
+            <p>
+              <strong>Hoy:</strong> Construir un workflow real de principio a
+              fin 🔥
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Anatomía Function Node -->
+      <div class="slide slide-code" data-slide="3">
+        <h2 class="slide-title">🔬 Anatomía de un Function Node</h2>
+        <div class="step">
+          <pre>
+// === ESTRUCTURA BÁSICA ===
+
+// 1. Obtener datos de entrada
+const items = $input.all();
+
+// 2. Procesar
+const resultados = items.map(item => {
+  const datos = item.json;
+  
+  // Tu lógica aquí
+  const procesado = transformar(datos);
+  
+  return {
+    json: procesado
+  };
+});
+
+// 3. Devolver resultados
+return resultados;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 4: Variables globales n8n -->
+      <div class="slide slide-code" data-slide="4">
+        <h2 class="slide-title">🌍 Variables globales de n8n</h2>
+        <div class="step">
+          <pre>
+// $input - Datos de entrada
+$input.all()         // Array con todos los items
+$input.first()       // Primer item
+$input.last()        // Último item
+$input.item          // Item actual (en expresiones)
+
+// $now - Fecha actual (objeto DateTime)
+$now.toISO()         // "2025-10-15T10:30:00.000Z"
+$now.toFormat("dd/MM/yyyy") // "15/10/2025"
+
+// $env - Variables de entorno
+$env.API_KEY         // Valor de variable de entorno
+
+// $json - Datos del item actual (en expresiones)
+$json.email          // Campo email del item actual</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 5: Estructura de items -->
+      <div class="slide slide-code" data-slide="5">
+        <h2 class="slide-title">📦 Estructura de items en n8n</h2>
+        <div class="step">
+          <pre>
+// Input típico de n8n
+const items = [
+  {
+    json: {
+      nombre: "Ana",
+      email: "ana@test.com"
+    },
+    binary: {} // Archivos (opcional)
+  }
+];
+
+// Acceder a datos
+items[0].json.nombre // "Ana"
+
+// Procesar y devolver
+const procesados = items.map(item => {
+  return {
+    json: {
+      ...item.json,
+      nombreMayus: item.json.nombre.toUpperCase()
+    }
+  };
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 6: Caso 1 - Transformar API -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">🔄 Caso 1: Transformar respuesta de API</h2>
+        <div class="step">
+          <pre>
+// === ENTRADA ===
+// Webhook recibe array de contactos de un CRM
+const items = $input.all();
+const contactos = items[0].json.contactos;
+
+// === TRANSFORMACIÓN ===
+const contactosLimpios = contactos
+  .filter(c => c.email && c.email.includes("@"))
+  .map(contacto => {
+    return {
+      email: contacto.email.toLowerCase().trim(),
+      nombre: contacto.nombre || "Sin nombre",
+      telefono: contacto.telefono?.trim() || "",
+      fechaImportacion: $now.toISO(),
+      origen: "CRM_API"
+    };
+  });
+
+// === SALIDA ===
+return [{ json: { contactos: contactosLimpios } }];</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 7: Caso 2 - Salidas múltiples -->
+      <div class="slide slide-code" data-slide="7">
+        <h2 class="slide-title">🔀 Salidas múltiples (outputs)</h2>
+        <div class="step">
+          <pre>
+// Function Node con múltiples salidas
+// Settings → "Outputs" → 3
+
+const items = $input.all();
+
+const output1 = []; // Aprobados
+const output2 = []; // Rechazados
+const output3 = []; // Revisar manualmente
+
+items.forEach(item => {
+  const pedido = item.json;
+  
+  if (pedido.total > 1000) {
+    output3.push(item); // Revisión manual
+  } else if (pedido.clienteVIP) {
+    output1.push(item); // Aprobar
+  } else {
+    output2.push(item); // Rechazar
+  }
+});
+
+return [output1, output2, output3];</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 8: Caso 3 - Agregar datos -->
+      <div class="slide slide-code" data-slide="8">
+        <h2 class="slide-title">📊 Caso 3: Agregar datos (reduce en acción)</h2>
+        <div class="step">
+          <pre>
+// === ENTRADA ===
+// Ventas del mes por vendedor
+const ventas = $input.all();
+
+// === AGREGACIÓN ===
+const ventasPorVendedor = ventas.reduce((acum, item) => {
+  const venta = item.json;
+  const vendedor = venta.vendedor;
+  
+  if (!acum[vendedor]) {
+    acum[vendedor] = {
+      vendedor: vendedor,
+      totalVentas: 0,
+      numeroVentas: 0
+    };
+  }
+  
+  acum[vendedor].totalVentas += venta.total;
+  acum[vendedor].numeroVentas += 1;
+  
+  return acum;
+}, {});
+
+// Convertir objeto a array
+const resultado = Object.values(ventasPorVendedor);
+return resultado.map(v => ({ json: v }));</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 9: Manejo robusto errores -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">🛡️ Manejo robusto de errores</h2>
+        <div class="step">
+          <pre>
+const items = $input.all();
+const exitosos = [];
+const errores = [];
+
+for (const item of items) {
+  try {
+    const datos = item.json;
+    
+    // Validaciones
+    if (!datos.email) throw new Error("Email requerido");
+    if (!datos.email.includes("@")) throw new Error("Email inválido");
+    
+    // Procesamiento
+    const procesado = {
+      email: datos.email.toLowerCase(),
+      estado: "procesado",
+      fecha: $now.toISO()
+    };
+    exitosos.push({ json: procesado });
+    
+  } catch (error) {
+    errores.push({
+      json: { ...item.json, error: error.message, estado: "error" }
+    });
+  }
+}
+
+return [exitosos, errores];</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 10: Expresiones vs Function Node -->
+      <div class="slide slide-table" data-slide="10">
+        <h2 class="slide-title">⚖️ Expresiones vs Function Node</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Expresiones</th>
+                <th>Function Node</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Bueno para:</strong><br />
+                  • Una línea<br />
+                  • Acceso simple<br />
+                  • Transformación básica
+                </td>
+                <td>
+                  <strong>Bueno para:</strong><br />
+                  • Múltiples operaciones<br />
+                  • Lógica compleja<br />
+                  • Bucles y validaciones
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <code>{{ $json.email.toLowerCase() }}</code>
+                </td>
+                <td>
+                  <pre
+                    style="
+                      background: #1e1e1e;
+                      color: #d4d4d4;
+                      padding: 10px;
+                      border-radius: 5px;
+                      font-size: 0.8em;
+                    "
+                  >
+const items = $input.all();
+// ... 20 líneas de lógica ...
+return resultados;</pre
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Slide 11: Proyecto Final - Intro -->
+      <div class="slide slide-project" data-slide="11">
+        <h2 class="slide-title">📋 PROYECTO FINAL - Especificaciones</h2>
+        <div class="step">
+          <div class="project-box">
+            <p>
+              <strong>Sistema de procesamiento de pedidos de ecommerce</strong>
+            </p>
+            <p><strong>Flujo:</strong></p>
+            <ol style="margin-left: 20px">
+              <li>Webhook recibe pedidos</li>
+              <li>Function Node 1: Limpiar y validar</li>
+              <li>Function Node 2: Clasificar (urgentes/normales)</li>
+              <li>Function Node 3: Calcular totales</li>
+              <li>Salidas: Slack (urgentes) / Email (normales)</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 12: Proyecto - Datos entrada -->
+      <div class="slide slide-project" data-slide="12">
+        <h2 class="slide-title">📥 Datos de entrada</h2>
+        <div class="step">
+          <div class="project-box">
+            <pre>
+{
+  "pedidos": [
+    {
+      "id": "PED001",
+      "cliente": { 
+        "email": "ANA@Test.COM", 
+        "vip": true 
+      },
+      "items": [
+        { "producto": "Teclado", "precio": 50, "cantidad": 2 },
+        { "producto": "Ratón", "precio": 25, "cantidad": 1 }
+      ],
+      "urgente": false,
+      "fecha": "2025-10-15T10:30:00Z"
+    }
+  ]
+}</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 13: Proyecto - Function 1 -->
+      <div class="slide slide-code" data-slide="13">
+        <h2 class="slide-title">🧹 PROYECTO - Function 1 (Limpiar)</h2>
+        <div class="step">
+          <pre>
+const items = $input.all();
+const pedidos = items[0].json.pedidos;
+
+const pedidosValidos = [];
+const pedidosInvalidos = [];
+
+for (const pedido of pedidos) {
+  try {
+    // Validar campos requeridos
+    if (!pedido.id || !pedido.cliente?.email) {
+      throw new Error("Faltan campos requeridos");
+    }
+    
+    // Limpiar datos
+    const pedidoLimpio = {
+      id: pedido.id,
+      clienteEmail: pedido.cliente.email.toLowerCase().trim(),
+      clienteVIP: pedido.cliente.vip || false,
+      items: pedido.items || [],
+      urgente: pedido.urgente || false,
+      fecha: new Date(pedido.fecha)
+    };
+    
+    pedidosValidos.push({ json: pedidoLimpio });
+  } catch (error) {
+    pedidosInvalidos.push({ json: { ...pedido, error: error.message } });
+  }
+}
+
+return [pedidosValidos, pedidosInvalidos];</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 14: Proyecto - Function 2 -->
+      <div class="slide slide-code" data-slide="14">
+        <h2 class="slide-title">🔀 PROYECTO - Function 2 (Clasificar)</h2>
+        <div class="step">
+          <pre>
+const items = $input.all();
+
+const urgentes = [];
+const normales = [];
+
+for (const item of items) {
+  const pedido = item.json;
+  
+  // Criterios de urgencia
+  const esUrgente = pedido.urgente || pedido.clienteVIP;
+  
+  if (esUrgente) {
+    urgentes.push({
+      json: { ...pedido, prioridad: "URGENTE", canal: "slack" }
+    });
+  } else {
+    normales.push({
+      json: { ...pedido, prioridad: "NORMAL", canal: "email" }
+    });
+  }
+}
+
+return [urgentes, normales];</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 15: Proyecto - Function 3 -->
+      <div class="slide slide-code" data-slide="15">
+        <h2 class="slide-title">💰 PROYECTO - Function 3 (Calcular)</h2>
+        <div class="step">
+          <pre>
+const IVA = 0.21;
+const DESCUENTO_VIP = 0.10;
+const items = $input.all();
+
+const pedidosConTotal = items.map(item => {
+  const pedido = item.json;
+  
+  // Calcular subtotal
+  const subtotal = pedido.items.reduce((sum, item) => {
+    return sum + (item.precio * item.cantidad);
+  }, 0);
+  
+  // Aplicar descuento VIP
+  const descuento = pedido.clienteVIP ? subtotal * DESCUENTO_VIP : 0;
+  const despuesDescuento = subtotal - descuento;
+  
+  // Aplicar IVA
+  const totalFinal = despuesDescuento * (1 + IVA);
+  
+  return {
+    json: {
+      ...pedido,
+      resumen: {
+        subtotal: Math.round(subtotal * 100) / 100,
+        descuento: Math.round(descuento * 100) / 100,
+        iva: Math.round((totalFinal - despuesDescuento) * 100) / 100,
+        total: Math.round(totalFinal * 100) / 100
+      }
+    }
+  };
+});
+
+return pedidosConTotal;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 16: Tips workflows complejos -->
+      <div class="slide slide-content" data-slide="16">
+        <h2 class="slide-title">🎯 Tips para workflows complejos</h2>
+        <div class="content">
+          <div class="step">
+            <ul>
+              <li>
+                <strong>Divide y vencerás:</strong> Un Function Node = una
+                responsabilidad
+              </li>
+              <li>
+                <strong>Nombra bien los nodos:</strong> "Validar emails" no
+                "Function 1"
+              </li>
+              <li>
+                <strong>Añade notas:</strong> Explica la lógica en los nodos
+              </li>
+              <li>
+                <strong>Maneja errores:</strong> Siempre prevé que algo puede
+                fallar
+              </li>
+              <li>
+                <strong>Testing incremental:</strong> Prueba cada nodo antes de
+                continuar
+              </li>
+              <li>
+                <strong>Reutiliza funciones:</strong> Crea una librería personal
+                de snippets
+              </li>
+              <li>
+                <strong>Documenta:</strong> Comentarios en el código, notas en
+                el workflow
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 17: ChatGPT como asistente -->
+      <div class="slide slide-content" data-slide="17">
+        <h2 class="slide-title">🤖 ChatGPT como asistente</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>❌ Mal:</strong> "Dame código para n8n"</p>
+          </div>
+          <div class="step">
+            <p><strong>✅ Bien:</strong></p>
+            <p
+              style="
+                background: #f0f0f0;
+                padding: 20px;
+                border-radius: 10px;
+                font-size: 0.9em;
+              "
+            >
+              Necesito un Function Node en n8n que:<br />
+              - Reciba array de contactos con { email, nombre, pais }<br />
+              - Filtre solo contactos de España (pais === "ES")<br />
+              - Limpie emails (minúsculas, sin espacios)<br />
+              - Devuelva en formato n8n: [{ json: {...} }]
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>Después de recibir código:</strong></p>
+            <ul>
+              <li>Léelo línea por línea</li>
+              <li>Identifica qué hace cada parte</li>
+              <li>Pruébalo con datos reales</li>
+              <li>Adapta a tu caso específico</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 18: Próximos pasos -->
+      <div class="slide slide-content" data-slide="18">
+        <h2 class="slide-title">🚀 Próximos pasos</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>Has completado la formación, ¿y ahora?</strong></p>
+          </div>
+          <div class="step">
+            <p><strong>1. Practica diariamente:</strong></p>
+            <ul>
+              <li>Convierte workflows simples en más robustos</li>
+              <li>Añade validaciones y manejo de errores</li>
+            </ul>
+          </div>
+          <div class="step">
+            <p><strong>2. Crea tu librería de snippets:</strong></p>
+            <ul>
+              <li>Validación de emails</li>
+              <li>Formateo de fechas</li>
+              <li>Cálculos comunes (IVA, descuentos)</li>
+            </ul>
+          </div>
+          <div class="step">
+            <p><strong>3. Comparte con el equipo</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 19: Final - Felicidades -->
+      <div class="slide slide-final" data-slide="19">
+        <div class="step visible">
+          <h1 class="slide-title">🎓 ¡Felicidades!</h1>
+        </div>
+        <div class="step">
+          <div class="final-content">
+            <h3>Has pasado de "copiar código sin entender" a:</h3>
+            <ul>
+              <li>Entender cómo funciona JavaScript</li>
+              <li>Crear tus propias funciones</li>
+              <li>Transformar datos con map/filter/reduce</li>
+              <li>Controlar flujos con if/else y bucles</li>
+              <li>Escribir código limpio y mantenible</li>
+              <li>Construir workflows completos en n8n</li>
+            </ul>
+            <p style="margin-top: 40px; font-size: 1.8em; font-weight: bold">
+              No eres programador,<br />eres un automatizador con superpoderes
+              🦸‍♂️
+            </p>
+            <p style="margin-top: 30px; font-size: 1.4em; color: #666">
+              ¡Keep coding! 💪
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">19</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>

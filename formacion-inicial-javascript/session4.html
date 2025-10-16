@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesión 4: Control de flujo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        overflow-y: auto;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #11aefa;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #0d8bc7;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      .slide-cover {
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 4.5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      .slide-content {
+        background: white;
+      }
+
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.1em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        border-left: 4px solid #14b8a6;
+      }
+
+      .slide-exercise {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+
+      .slide-exercise .slide-title {
+        color: white;
+      }
+
+      .slide-exercise .exercise-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-exercise pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
+        overflow-x: auto;
+        font-size: 1em;
+      }
+
+      .slide-solution {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .slide-solution .slide-title {
+        color: white;
+      }
+
+      .slide-solution pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 0.95em;
+        line-height: 1.5;
+        overflow-x: auto;
+      }
+
+      .slide-summary {
+        background: #14b8a6;
+      }
+
+      .slide-summary .slide-title {
+        color: white;
+      }
+
+      .slide-summary .summary-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        font-size: 1.4em;
+      }
+
+      .slide-summary .summary-box h3 {
+        color: #14b8a6;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+      }
+
+      .slide-summary .summary-box ul {
+        list-style: none;
+      }
+
+      .slide-summary .summary-box li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-summary .summary-box li:before {
+        content: "✅";
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🔀 SESIÓN 4</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Control de flujo</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: if/else -->
+      <div class="slide slide-code" data-slide="2">
+        <h2 class="slide-title">🤔 Tomar decisiones</h2>
+        <div class="step">
+          <pre>
+const edad = 18;
+
+if (edad >= 18) {
+  console.log("Eres mayor de edad");
+} else {
+  console.log("Eres menor de edad");
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Concepto:</strong> El código puede tomar diferentes caminos
+            según condiciones
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: if/else if/else -->
+      <div class="slide slide-code" data-slide="3">
+        <h2 class="slide-title">🌿 if / else if / else</h2>
+        <div class="step">
+          <pre>
+const nota = 7;
+
+if (nota >= 9) {
+  console.log("Sobresaliente");
+} else if (nota >= 7) {
+  console.log("Notable");
+} else if (nota >= 5) {
+  console.log("Aprobado");
+} else {
+  console.log("Suspenso");
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Importante:</strong> Se ejecuta solo el primer bloque que
+            cumpla la condición
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Operadores lógicos -->
+      <div class="slide slide-code" data-slide="4">
+        <h2 class="slide-title">🔗 Operadores lógicos</h2>
+        <div class="step">
+          <pre>
+// AND (&&) - Ambas condiciones deben cumplirse
+if (edad >= 18 && tieneLicencia) {
+  console.log("Puedes conducir");
+}
+
+// OR (||) - Al menos una debe cumplirse
+if (esAdmin || esEditor) {
+  console.log("Puedes editar contenido");
+}
+
+// NOT (!) - Invierte el valor
+if (!estaActivo) {
+  console.log("Usuario inactivo");
+}
+
+// Combinar
+if ((esAdmin || esEditor) && estaActivo) {
+  console.log("Acceso concedido");
+}</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 5: Operador ternario -->
+      <div class="slide slide-code" data-slide="5">
+        <h2 class="slide-title">⚡ Operador ternario (if corto)</h2>
+        <div class="step">
+          <pre>
+// if/else tradicional
+let estado;
+if (pedido.pagado) {
+  estado = "Completado";
+} else {
+  estado = "Pendiente";
+}
+
+// Operador ternario (más corto)
+const estado = pedido.pagado ? "Completado" : "Pendiente";
+
+// Estructura: condicion ? siTrue : siFalse
+
+// Casos reales
+const precio = esVIP ? precioBase * 0.8 : precioBase;
+const saludo = hora < 12 ? "Buenos días" : "Buenas tardes";</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 6: Switch -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">🎚️ Switch (muchas opciones)</h2>
+        <div class="step">
+          <pre>
+const diaSemana = "lunes";
+
+switch (diaSemana) {
+  case "lunes":
+  case "martes":
+  case "miércoles":
+  case "jueves":
+  case "viernes":
+    console.log("Día laboral");
+    break;
+  case "sábado":
+  case "domingo":
+    console.log("Fin de semana");
+    break;
+  default:
+    console.log("Día no válido");
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Cuándo usar:</strong> Muchas opciones específicas (más de
+            3-4)
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7: for -->
+      <div class="slide slide-code" data-slide="7">
+        <h2 class="slide-title">🔄 Bucle for (clásico)</h2>
+        <div class="step">
+          <pre>
+// Contar del 1 al 5
+for (let i = 1; i <= 5; i++) {
+  console.log(i);
+}
+// 1, 2, 3, 4, 5
+
+// Estructura:
+// for (inicio; condición; incremento) { código }
+
+// Recorrer array
+const nombres = ["Ana", "Luis", "María"];
+for (let i = 0; i < nombres.length; i++) {
+  console.log(`Hola ${nombres[i]}`);
+}</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 8: for...of -->
+      <div class="slide slide-code" data-slide="8">
+        <h2 class="slide-title">⭐ for...of (más moderno)</h2>
+        <div class="step">
+          <pre>
+const nombres = ["Ana", "Luis", "María"];
+
+// for...of: itera sobre valores
+for (const nombre of nombres) {
+  console.log(`Hola ${nombre}`);
+}
+
+// Ventaja: más legible, no necesitas índices
+
+// Con objetos
+const pedidos = [
+  { id: 1, total: 100 },
+  { id: 2, total: 200 }
+];
+
+for (const pedido of pedidos) {
+  console.log(`Pedido ${pedido.id}: ${pedido.total}€`);
+}</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 9: while -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">⏰ while (mientras se cumpla)</h2>
+        <div class="step">
+          <pre>
+// Ejecuta mientras la condición sea true
+let contador = 0;
+
+while (contador < 5) {
+  console.log(contador);
+  contador++;
+}
+// 0, 1, 2, 3, 4
+
+// Caso real: procesar hasta encontrar algo
+const pedidos = [
+  { id: 1, urgente: false },
+  { id: 2, urgente: false },
+  { id: 3, urgente: true },
+  { id: 4, urgente: false }
+];
+
+let i = 0;
+while (i < pedidos.length && !pedidos[i].urgente) {
+  i++;
+}
+// Se detiene cuando encuentra el urgente</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 10: break y continue -->
+      <div class="slide slide-code" data-slide="10">
+        <h2 class="slide-title">🛑 break y continue</h2>
+        <div class="step">
+          <pre>
+// break: salir del bucle
+for (let i = 0; i < 10; i++) {
+  if (i === 5) break; // Para cuando llega a 5
+  console.log(i);
+}
+// 0, 1, 2, 3, 4
+
+// continue: saltar a siguiente iteración
+for (let i = 0; i < 5; i++) {
+  if (i === 2) continue; // Salta el 2
+  console.log(i);
+}
+// 0, 1, 3, 4</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 11: try/catch -->
+      <div class="slide slide-code" data-slide="11">
+        <h2 class="slide-title">🛡️ try/catch (manejo de errores)</h2>
+        <div class="step">
+          <pre>
+// Sin try/catch (puede romper todo)
+const datos = JSON.parse(textoJSON); // Si falla, se para todo ❌
+
+// Con try/catch (controlado)
+try {
+  const datos = JSON.parse(textoJSON);
+  console.log("JSON válido:", datos);
+} catch (error) {
+  console.log("JSON inválido:", error.message);
+  // Puedes devolver valor por defecto
+  const datos = {};
+}
+
+// El código continúa incluso si hay error ✅</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 12: try/catch en n8n -->
+      <div class="slide slide-code" data-slide="12">
+        <h2 class="slide-title">🎯 try/catch en n8n (muy importante)</h2>
+        <div class="step">
+          <pre>
+// Function Node que procesa respuestas de API
+const items = $input.all();
+const resultados = [];
+
+for (const item of items) {
+  try {
+    const datos = JSON.parse(item.json.respuesta);
+    resultados.push({
+      json: {
+        id: item.json.id,
+        datos: datos,
+        estado: "procesado"
+      }
+    });
+  } catch (error) {
+    resultados.push({
+      json: {
+        id: item.json.id,
+        error: error.message,
+        estado: "error"
+      }
+    });
+  }
+}
+
+return resultados;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 13: Ejercicio 1 -->
+      <div class="slide slide-exercise" data-slide="13">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 1</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <pre>
+// CONTEXTO: Sistema de descuentos por volumen
+const pedidos = [
+  { cliente: "Ana", total: 50 },
+  { cliente: "Luis", total: 150 },
+  { cliente: "María", total: 300 },
+  { cliente: "Pedro", total: 600 }
+];
+
+// REGLAS DE DESCUENTO:
+// < 100€ → 0%
+// 100-299€ → 10%
+// 300-499€ → 15%
+// >= 500€ → 20%
+
+// TU MISIÓN:
+// Calcular descuento y total final para cada pedido
+// Devolver { cliente, total, descuento, totalFinal }</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 14: Solución 1 -->
+      <div class="slide slide-solution" data-slide="14">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 1</h2>
+        <div class="step">
+          <pre>
+const pedidosConDescuento = pedidos.map(pedido => {
+  let porcentajeDescuento;
+  
+  if (pedido.total < 100) {
+    porcentajeDescuento = 0;
+  } else if (pedido.total < 300) {
+    porcentajeDescuento = 0.10;
+  } else if (pedido.total < 500) {
+    porcentajeDescuento = 0.15;
+  } else {
+    porcentajeDescuento = 0.20;
+  }
+  
+  const descuento = pedido.total * porcentajeDescuento;
+  const totalFinal = pedido.total - descuento;
+  
+  return {
+    cliente: pedido.cliente,
+    total: pedido.total,
+    descuento: descuento,
+    totalFinal: totalFinal
+  };
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 15: Ejercicio 2 -->
+      <div class="slide slide-exercise" data-slide="15">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 2</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <pre>
+// CONTEXTO: Validar formularios de registro
+const registros = [
+  { nombre: "Ana", email: "ana@test.com", edad: 25 },
+  { nombre: "", email: "invalido", edad: 17 },
+  { nombre: "Luis", email: "luis@empresa.com", edad: 30 },
+  { nombre: "María", email: "maria@test.com", edad: 15 }
+];
+
+// REGLAS:
+// - Nombre no puede estar vacío
+// - Email debe contener @ y .
+// - Edad debe ser >= 18
+
+// TU MISIÓN:
+// Si es válido: { ...registro, estado: "valido" }
+// Si no: { ...registro, estado: "rechazado", errores: [...] }</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 16: Solución 2 -->
+      <div class="slide slide-solution" data-slide="16">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 2</h2>
+        <div class="step">
+          <pre>
+const procesados = registros.map(registro => {
+  const errores = [];
+  
+  // Validar nombre
+  if (!registro.nombre || registro.nombre.trim() === "") {
+    errores.push("Nombre vacío");
+  }
+  
+  // Validar email
+  if (!registro.email.includes("@") || !registro.email.includes(".")) {
+    errores.push("Email inválido");
+  }
+  
+  // Validar edad
+  if (registro.edad < 18) {
+    errores.push("Menor de edad");
+  }
+  
+  // Resultado
+  if (errores.length === 0) {
+    return { ...registro, estado: "valido" };
+  } else {
+    return { ...registro, estado: "rechazado", errores };
+  }
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 17: Resumen -->
+      <div class="slide slide-summary" data-slide="17">
+        <h2 class="slide-title">📝 Resumen Sesión 4</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>if/else y operador ternario</li>
+              <li>switch para múltiples casos</li>
+              <li>Bucles: for, for...of, while</li>
+              <li>try/catch para manejar errores</li>
+              <li>Validar y clasificar datos</li>
+              <li>Control robusto en n8n</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> Buenas prácticas y librerías
+              útiles 🌟
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">17</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>

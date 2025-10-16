@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesión 3: Objetos y Arrays a fondo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        overflow-y: auto;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #11aefa;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #0d8bc7;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      .slide-cover {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 4.5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      .slide-content {
+        background: white;
+      }
+
+      .slide-content .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 1.4em;
+        line-height: 1.6;
+      }
+
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.1em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        border-left: 4px solid #ec4899;
+      }
+
+      .slide-exercise {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+
+      .slide-exercise .slide-title {
+        color: white;
+      }
+
+      .slide-exercise .exercise-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-exercise pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
+        overflow-x: auto;
+        font-size: 1em;
+      }
+
+      .slide-solution {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .slide-solution .slide-title {
+        color: white;
+      }
+
+      .slide-solution pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 1em;
+        line-height: 1.5;
+        overflow-x: auto;
+      }
+
+      .slide-summary {
+        background: #ec4899;
+      }
+
+      .slide-summary .slide-title {
+        color: white;
+      }
+
+      .slide-summary .summary-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        font-size: 1.4em;
+      }
+
+      .slide-summary .summary-box h3 {
+        color: #ec4899;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+      }
+
+      .slide-summary .summary-box ul {
+        list-style: none;
+      }
+
+      .slide-summary .summary-box li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-summary .summary-box li:before {
+        content: "✅";
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🎨 SESIÓN 3</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Objetos y Arrays a fondo</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: .forEach() -->
+      <div class="slide slide-code" data-slide="2">
+        <h2 class="slide-title">🔄 .forEach() - Recorrer sin transformar</h2>
+        <div class="step">
+          <pre>
+const nombres = ["Ana", "Luis", "María"];
+
+// forEach: ejecuta código para cada elemento
+nombres.forEach((nombre) => {
+  console.log(`Hola ${nombre}`);
+});
+
+// Output:
+// Hola Ana
+// Hola Luis
+// Hola María</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Importante:</strong> <code>.forEach()</code> NO devuelve
+            nada, solo ejecuta código
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: .map() -->
+      <div class="slide slide-code" data-slide="3">
+        <h2 class="slide-title">🎨 .map() - Transformar todos los elementos</h2>
+        <div class="step">
+          <pre>
+const precios = [10, 20, 30, 40];
+
+// Aplicar IVA a todos
+const preciosConIVA = precios.map((precio) => {
+  return precio * 1.21;
+});
+
+console.log(preciosConIVA);
+// [12.1, 24.2, 36.3, 48.4]
+
+// Versión corta
+const preciosConIVA = precios.map(precio => precio * 1.21);</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla de oro:</strong> <code>.map()</code> siempre devuelve
+            un array del mismo tamaño
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: .map() con objetos -->
+      <div class="slide slide-code" data-slide="4">
+        <h2 class="slide-title">📦 .map() con objetos</h2>
+        <div class="step">
+          <pre>
+const usuarios = [
+  { nombre: "Ana", edad: 25 },
+  { nombre: "Luis", edad: 30 },
+  { nombre: "María", edad: 28 }
+];
+
+// Extraer solo los nombres
+const nombres = usuarios.map(usuario => usuario.nombre);
+// ["Ana", "Luis", "María"]
+
+// Crear objetos nuevos
+const usuariosConSaludo = usuarios.map(usuario => {
+  return {
+    nombre: usuario.nombre,
+    mensaje: `Hola ${usuario.nombre}`
+  };
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 5: .filter() -->
+      <div class="slide slide-code" data-slide="5">
+        <h2 class="slide-title">🔍 .filter() - Quedarse solo con algunos</h2>
+        <div class="step">
+          <pre>
+const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Solo los pares
+const pares = numeros.filter(numero => numero % 2 === 0);
+// [2, 4, 6, 8, 10]
+
+// Solo los mayores de 5
+const mayores = numeros.filter(numero => numero > 5);
+// [6, 7, 8, 9, 10]</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla:</strong> <code>.filter()</code> devuelve array con
+            menos o igual elementos
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: .filter() con objetos -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">🎯 .filter() con objetos (caso real)</h2>
+        <div class="step">
+          <pre>
+const pedidos = [
+  { id: 1, cliente: "Ana", total: 150, pagado: true },
+  { id: 2, cliente: "Luis", total: 230, pagado: false },
+  { id: 3, cliente: "Marta", total: 89, pagado: true },
+  { id: 4, cliente: "Pedro", total: 320, pagado: false }
+];
+
+// Solo pedidos pagados
+const pagados = pedidos.filter(pedido => pedido.pagado === true);
+
+// Pedidos pendientes de más de 100€
+const pendientesGrandes = pedidos.filter(pedido => {
+  return !pedido.pagado && pedido.total > 100;
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 7: Combinando .filter() y .map() -->
+      <div class="slide slide-code" data-slide="7">
+        <h2 class="slide-title">🔥 Combinando .filter() y .map()</h2>
+        <div class="step">
+          <pre>
+const productos = [
+  { nombre: "Teclado", precio: 50, stock: 5 },
+  { nombre: "Ratón", precio: 25, stock: 0 },
+  { nombre: "Monitor", precio: 200, stock: 3 },
+  { nombre: "Webcam", precio: 75, stock: 0 }
+];
+
+// 1. Filtrar productos en stock
+// 2. Añadir IVA al precio
+const productosDisponibles = productos
+  .filter(producto => producto.stock > 0)
+  .map(producto => {
+    return {
+      nombre: producto.nombre,
+      precioConIVA: producto.precio * 1.21,
+      stock: producto.stock
+    };
+  });</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 8: .reduce() -->
+      <div class="slide slide-code" data-slide="8">
+        <h2 class="slide-title">⚡ .reduce() - El método más potente</h2>
+        <div class="step">
+          <pre>
+const numeros = [1, 2, 3, 4, 5];
+
+// Sumar todos
+const suma = numeros.reduce((acumulador, numero) => {
+  return acumulador + numero;
+}, 0); // 0 es el valor inicial
+
+// Explicación paso a paso:
+// Vuelta 1: acumulador=0, numero=1 → devuelve 0+1=1
+// Vuelta 2: acumulador=1, numero=2 → devuelve 1+2=3
+// Vuelta 3: acumulador=3, numero=3 → devuelve 3+3=6
+// Vuelta 4: acumulador=6, numero=4 → devuelve 6+4=10
+// Vuelta 5: acumulador=10, numero=5 → devuelve 10+5=15</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 9: .reduce() casos reales -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">💰 .reduce() casos reales</h2>
+        <div class="step">
+          <pre>
+const pedidos = [
+  { cliente: "Ana", total: 150 },
+  { cliente: "Luis", total: 230 },
+  { cliente: "Marta", total: 89 }
+];
+
+// Calcular total facturado
+const totalFacturado = pedidos.reduce((suma, pedido) => {
+  return suma + pedido.total;
+}, 0);
+// 469
+
+// Encontrar el pedido más alto
+const pedidoMax = pedidos.reduce((max, pedido) => {
+  return pedido.total > max.total ? pedido : max;
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 10: Destructuring de objetos -->
+      <div class="slide slide-code" data-slide="10">
+        <h2 class="slide-title">📤 Destructuring de objetos</h2>
+        <div class="step">
+          <pre>
+// Sin destructuring
+const usuario = { nombre: "Ana", edad: 25, ciudad: "Madrid" };
+const nombre = usuario.nombre;
+const edad = usuario.edad;
+
+// Con destructuring (más limpio)
+const { nombre, edad } = usuario;
+
+// Con renombrado
+const { nombre: nombreUsuario } = usuario;
+
+// En parámetros de función
+const saludar = ({ nombre, edad }) => {
+  return `Hola ${nombre}, tienes ${edad} años`;
+};
+saludar(usuario);</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 11: Spread operator -->
+      <div class="slide slide-code" data-slide="11">
+        <h2 class="slide-title">🌊 Spread operator (...)</h2>
+        <div class="step">
+          <pre>
+// Combinar arrays
+const array1 = [1, 2, 3];
+const array2 = [4, 5, 6];
+const combinado = [...array1, ...array2];
+// [1, 2, 3, 4, 5, 6]
+
+// Copiar y añadir
+const original = [1, 2, 3];
+const copia = [...original, 4, 5];
+// [1, 2, 3, 4, 5]
+
+// Combinar objetos
+const persona = { nombre: "Ana", edad: 25 };
+const empleado = { ...persona, puesto: "Developer" };
+// { nombre: "Ana", edad: 25, puesto: "Developer" }</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 12: Spread en n8n -->
+      <div class="slide slide-code" data-slide="12">
+        <h2 class="slide-title">🎯 Spread en n8n (muy útil)</h2>
+        <div class="step">
+          <pre>
+// Añadir campos a objetos existentes
+const contactos = [
+  { nombre: "Ana", email: "ana@test.com" },
+  { nombre: "Luis", email: "luis@test.com" }
+];
+
+const contactosEnriquecidos = contactos.map(contacto => {
+  return {
+    ...contacto,
+    fechaImportacion: new Date(),
+    origen: "API"
+  };
+});
+
+// Resultado:
+// [
+//   { nombre: "Ana", email: "ana@test.com", 
+//     fechaImportacion: ..., origen: "API" },
+//   { nombre: "Luis", email: "luis@test.com", 
+//     fechaImportacion: ..., origen: "API" }
+// ]</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 13: Ejercicio 1 -->
+      <div class="slide slide-exercise" data-slide="13">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 1</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <pre>
+// INPUT: Lista de pedidos de ecommerce
+const pedidos = [
+  { id: 1, productos: 3, subtotal: 150, descuento: 0 },
+  { id: 2, productos: 1, subtotal: 80, descuento: 10 },
+  { id: 3, productos: 5, subtotal: 300, descuento: 50 },
+  { id: 4, productos: 2, subtotal: 45, descuento: 0 }
+];
+
+// TU MISIÓN:
+// 1. Filtrar solo pedidos con más de 1 producto
+// 2. Calcular total (subtotal - descuento + IVA 21%)
+// 3. Devolver array con { id, total }</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 14: Solución 1 -->
+      <div class="slide slide-solution" data-slide="14">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 1</h2>
+        <div class="step">
+          <pre>
+const pedidos = [
+  { id: 1, productos: 3, subtotal: 150, descuento: 0 },
+  { id: 2, productos: 1, subtotal: 80, descuento: 10 },
+  { id: 3, productos: 5, subtotal: 300, descuento: 50 },
+  { id: 4, productos: 2, subtotal: 45, descuento: 0 }
+];
+
+const resultado = pedidos
+  .filter(pedido => pedido.productos > 1)
+  .map(pedido => {
+    const sinDescuento = pedido.subtotal - pedido.descuento;
+    const total = sinDescuento * 1.21;
+    return {
+      id: pedido.id,
+      total: Math.round(total * 100) / 100
+    };
+  });
+
+// [ { id: 1, total: 181.5 }, { id: 3, total: 302.5 }, 
+//   { id: 4, total: 54.45 } ]</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 15: Ejercicio 2 -->
+      <div class="slide slide-exercise" data-slide="15">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO 2 (n8n real)</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <pre>
+// CONTEXTO: Webhook recibe lista de contactos desordenada
+const contactos = [
+  { email: "ANA@Test.COM", telefono: " 612345678 ", pais: "es" },
+  { email: "luis@EMPRESA.com", telefono: "622111222", pais: "ES" },
+  { email: "", telefono: "633999888", pais: "fr" },
+  { email: "maria@example.es", telefono: "", pais: "ES" }
+];
+
+// TU MISIÓN:
+// 1. Filtrar solo contactos españoles con email válido
+// 2. Limpiar: email minúsculas, quitar espacios teléfono
+// 3. Añadir campo "origen: 'webhook'" a cada uno</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 16: Solución 2 -->
+      <div class="slide slide-solution" data-slide="16">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO 2</h2>
+        <div class="step">
+          <pre>
+const contactosLimpios = contactos
+  .filter(contacto => {
+    const esEspanol = contacto.pais.toUpperCase() === "ES";
+    const tieneEmail = contacto.email.length > 0;
+    return esEspanol && tieneEmail;
+  })
+  .map(contacto => {
+    return {
+      email: contacto.email.toLowerCase().trim(),
+      telefono: contacto.telefono.trim(),
+      pais: contacto.pais.toUpperCase(),
+      origen: "webhook"
+    };
+  });
+
+// Resultado:
+// [
+//   { email: "ana@test.com", telefono: "612345678", 
+//     pais: "ES", origen: "webhook" },
+//   { email: "luis@empresa.com", telefono: "622111222", 
+//     pais: "ES", origen: "webhook" },
+//   { email: "maria@example.es", telefono: "", 
+//     pais: "ES", origen: "webhook" }
+// ]</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 17: Resumen -->
+      <div class="slide slide-summary" data-slide="17">
+        <h2 class="slide-title">📝 Resumen Sesión 3</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>.map() - transformar arrays</li>
+              <li>.filter() - filtrar elementos</li>
+              <li>.reduce() - reducir a un valor</li>
+              <li>Destructuring y spread operator</li>
+              <li>Encadenar métodos para transformaciones complejas</li>
+              <li>Limpiar y normalizar datos en n8n</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> Control de flujo (if, switch,
+              bucles) 🔀
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">17</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>

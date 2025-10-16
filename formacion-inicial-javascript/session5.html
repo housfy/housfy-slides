@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sesión 5: Buenas prácticas y librerías útiles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+        overflow-y: auto;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #11aefa;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #0d8bc7;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      .slide-cover {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 4.5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+      }
+
+      .slide-content {
+        background: white;
+      }
+
+      .slide-content .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        font-size: 1.4em;
+        line-height: 1.6;
+      }
+
+      .slide-content ul {
+        list-style-type: none;
+        margin-left: 20px;
+      }
+
+      .slide-content ul li {
+        margin-bottom: 15px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .slide-content ul li:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #11aefa;
+        font-size: 1.5em;
+      }
+
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.05em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.3em;
+        border-left: 4px solid #f59e0b;
+      }
+
+      .slide-exercise {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+
+      .slide-exercise .slide-title {
+        color: white;
+      }
+
+      .slide-exercise .exercise-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        font-size: 1.2em;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-exercise pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
+        overflow-x: auto;
+        font-size: 1em;
+      }
+
+      .slide-solution {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .slide-solution .slide-title {
+        color: white;
+      }
+
+      .slide-solution pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 0.9em;
+        line-height: 1.5;
+        overflow-x: auto;
+      }
+
+      .slide-summary {
+        background: #f59e0b;
+      }
+
+      .slide-summary .slide-title {
+        color: white;
+      }
+
+      .slide-summary .summary-box {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        font-size: 1.4em;
+      }
+
+      .slide-summary .summary-box h3 {
+        color: #f59e0b;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+      }
+
+      .slide-summary .summary-box ul {
+        list-style: none;
+      }
+
+      .slide-summary .summary-box li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-summary .summary-box li:before {
+        content: "✅";
+        position: absolute;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🌟 SESIÓN 5</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Buenas prácticas y librerías útiles</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: Código limpio -->
+      <div class="slide slide-content" data-slide="2">
+        <h2 class="slide-title">🧹 Código limpio = Código que dura</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>Principios:</strong></p>
+            <ul>
+              <li>El código se lee 10 veces más de lo que se escribe</li>
+              <li>Tu "yo del futuro" te lo agradecerá</li>
+              <li>Otros también usarán tu código (compañeros, ChatGPT)</li>
+            </ul>
+          </div>
+          <div class="step">
+            <p>
+              <strong>Objetivo:</strong> Escribir código claro, no solo
+              funcional 💡
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Nombres descriptivos -->
+      <div class="slide slide-code" data-slide="3">
+        <h2 class="slide-title">📛 Nombres descriptivos</h2>
+        <div class="step">
+          <pre>
+// ❌ MAL
+const x = pedidos.filter(p => p.t > 100);
+const fn = (d) => d * 1.21;
+
+// ✅ BIEN
+const pedidosGrandes = pedidos.filter(pedido => pedido.total > 100);
+const aplicarIVA = (precio) => precio * 1.21;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Reglas:</strong><br />
+            • Variables: sustantivos (usuario, pedido, total)<br />
+            • Funciones: verbos (calcular, validar, procesar)<br />
+            • Booleanos: preguntas (estaActivo, tienePremium, esValido)
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Constantes con nombres claros -->
+      <div class="slide slide-code" data-slide="4">
+        <h2 class="slide-title">🔤 Constantes con nombres claros</h2>
+        <div class="step">
+          <pre>
+// ❌ MAL (números mágicos)
+const precio = subtotal * 1.21;
+if (usuario.edad >= 18) { ... }
+
+// ✅ BIEN (constantes con nombre)
+const IVA_ESPANA = 1.21;
+const EDAD_MINIMA = 18;
+
+const precio = subtotal * IVA_ESPANA;
+if (usuario.edad >= EDAD_MINIMA) { ... }</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Convención:</strong> MAYUSCULAS_CON_GUION para constantes
+            globales
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Funciones pequeñas -->
+      <div class="slide slide-code" data-slide="5">
+        <h2 class="slide-title">🎯 Funciones pequeñas y enfocadas</h2>
+        <div class="step">
+          <pre>
+// ❌ MAL (hace demasiado)
+const procesarPedido = (pedido) => {
+  const descuento = pedido.total * 0.1;
+  const conDescuento = pedido.total - descuento;
+  const iva = conDescuento * 0.21;
+  const total = conDescuento + iva;
+  const email = `${pedido.cliente}@email.com`;
+  // ... 50 líneas más
+};
+
+// ✅ BIEN (una función, una responsabilidad)
+const calcularDescuento = (total) => total * 0.1;
+const aplicarIVA = (precio) => precio * 1.21;
+
+const procesarPedido = (pedido) => {
+  const descuento = calcularDescuento(pedido.total);
+  const sinDescuento = pedido.total - descuento;
+  const totalFinal = aplicarIVA(sinDescuento);
+  return { ...pedido, totalFinal };
+};</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 6: Comentarios útiles -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">💬 Comentarios útiles</h2>
+        <div class="step">
+          <pre>
+// ❌ MAL (obvios o inútiles)
+// Sumar dos números
+const suma = a + b;
+
+// ✅ BIEN (explican "por qué", no "qué")
+// Redondeamos a 2 decimales porque la API solo acepta ese formato
+const precioFinal = Math.round(precio * 100) / 100;
+
+// Usamos toLowerCase porque algunos CRM devuelven emails en mayúsculas
+const email = contacto.email.toLowerCase();
+
+// TODO: Añadir validación de teléfono cuando tengamos formato definitivo
+const telefono = contacto.telefono;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 7: Comentarios en n8n -->
+      <div class="slide slide-code" data-slide="7">
+        <h2 class="slide-title">📝 Comentarios en n8n</h2>
+        <div class="step">
+          <pre>
+// === CONFIGURACIÓN ===
+const IVA = 0.21;
+const DESCUENTO_VIP = 0.15;
+
+// === ENTRADA ===
+// Esperamos array de objetos con: { cliente, total, esVIP }
+const pedidos = $input.all();
+
+// === PROCESAMIENTO ===
+const resultado = pedidos.map(item => {
+  const pedido = item.json;
+  
+  // Aplicar descuento VIP si corresponde
+  const descuento = pedido.esVIP ? pedido.total * DESCUENTO_VIP : 0;
+  const subtotal = pedido.total - descuento;
+  const totalFinal = subtotal * (1 + IVA);
+  
+  return { json: { ...pedido, totalFinal } };
+});
+
+// === SALIDA ===
+return resultado;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 8: Fechas con Date -->
+      <div class="slide slide-code" data-slide="8">
+        <h2 class="slide-title">📅 Fechas con Date nativo</h2>
+        <div class="step">
+          <pre>
+// Fecha actual
+const ahora = new Date();
+
+// Crear fecha específica
+const navidad = new Date("2025-12-25");
+const fecha = new Date(2025, 11, 25); // Mes: 0=Enero, 11=Diciembre
+
+// Obtener componentes
+const año = ahora.getFullYear();        // 2025
+const mes = ahora.getMonth();           // 0-11
+const dia = ahora.getDate();            // 1-31
+const hora = ahora.getHours();          // 0-23
+
+// Comparar fechas
+const fecha1 = new Date("2025-10-15");
+const fecha2 = new Date("2025-10-20");
+fecha1 < fecha2 // true</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 9: Manipular fechas -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">⏰ Manipular fechas</h2>
+        <div class="step">
+          <pre>
+// Sumar/restar días
+const hoy = new Date();
+const en7Dias = new Date(hoy);
+en7Dias.setDate(hoy.getDate() + 7);
+
+const hace30Dias = new Date(hoy);
+hace30Dias.setDate(hoy.getDate() - 30);
+
+// Diferencia entre fechas (en milisegundos)
+const fecha1 = new Date("2025-10-15");
+const fecha2 = new Date("2025-10-20");
+const diferencia = fecha2 - fecha1;
+const diasDiferencia = diferencia / (1000 * 60 * 60 * 24); // 5
+
+// En n8n: usa $now para fecha actual
+// const ahora = $now;</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 10: Formatear fechas -->
+      <div class="slide slide-code" data-slide="10">
+        <h2 class="slide-title">📆 Formatear fechas</h2>
+        <div class="step">
+          <pre>
+// Formato ISO (universal)
+const fecha = new Date();
+const iso = fecha.toISOString(); // "2025-10-15T10:30:00.000Z"
+
+// Formato local
+const local = fecha.toLocaleDateString('es-ES'); // "15/10/2025"
+
+// Formato personalizado (manual)
+const formatearFecha = (fecha) => {
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const año = fecha.getFullYear();
+  return `${dia}/${mes}/${año}`;
+};
+
+const hoy = new Date();
+formatearFecha(hoy); // "15/10/2025"</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 11: JSON -->
+      <div class="slide slide-code" data-slide="11">
+        <h2 class="slide-title">🔄 JSON.parse y JSON.stringify</h2>
+        <div class="step">
+          <pre>
+// JSON.parse: texto → objeto
+const textoJSON = '{"nombre":"Ana","edad":25}';
+const objeto = JSON.parse(textoJSON);
+console.log(objeto.nombre); // "Ana"
+
+// JSON.stringify: objeto → texto
+const persona = { nombre: "Luis", edad: 30 };
+const texto = JSON.stringify(persona);
+// '{"nombre":"Luis","edad":30}'
+
+// Con formato legible (para debugging)
+const textoFormateado = JSON.stringify(persona, null, 2);
+// {
+//   "nombre": "Luis",
+//   "edad": 30
+// }</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 12: JSON en n8n -->
+      <div class="slide slide-code" data-slide="12">
+        <h2 class="slide-title">🎯 JSON en n8n (muy común)</h2>
+        <div class="step">
+          <pre>
+// Caso 1: API devuelve string JSON en un campo
+const items = $input.all();
+const procesados = items.map(item => {
+  try {
+    const datos = JSON.parse(item.json.respuesta);
+    return { json: datos };
+  } catch (error) {
+    return { json: { error: "JSON inválido" } };
+  }
+});
+
+// Caso 2: Enviar a API que requiere string JSON
+const datos = { nombre: "Ana", email: "ana@test.com" };
+const payload = JSON.stringify(datos);
+// Ahora puedes enviarlo en un HTTP Request</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 13: Métodos de string -->
+      <div class="slide slide-code" data-slide="13">
+        <h2 class="slide-title">📝 Métodos de string útiles</h2>
+        <div class="step">
+          <pre>
+const texto = "  Hola Mundo  ";
+
+// Limpiar espacios
+texto.trim();                    // "Hola Mundo"
+
+// Mayúsculas/minúsculas
+texto.toLowerCase();             // "  hola mundo  "
+texto.toUpperCase();             // "  HOLA MUNDO  "
+
+// Buscar
+texto.includes("Mundo");         // true
+texto.startsWith("Hola");        // false (por los espacios)
+texto.trim().startsWith("Hola"); // true
+
+// Reemplazar
+texto.replace("Mundo", "Amigo"); // "  Hola Amigo  "
+
+// Dividir
+"a,b,c".split(",");              // ["a", "b", "c"]
+
+// Unir
+["a", "b", "c"].join("-");       // "a-b-c"</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 14: Template literals avanzados -->
+      <div class="slide slide-code" data-slide="14">
+        <h2 class="slide-title">🎨 Template literals avanzados</h2>
+        <div class="step">
+          <pre>const nombre = "Ana";
+const pedidos = 5;
+const total = 500;
+
+// Multilinea
+const mensaje = `
+Hola ${nombre},
+
+Tienes ${pedidos} pedidos pendientes.
+Total a pagar: ${total}€
+
+Gracias por tu compra.
+`;
+
+// Con expresiones
+const resumen = `Promedio: ${total / pedidos}€ por pedido`;
+
+// Útil en n8n para generar emails o mensajes
+const emailHTML = `
+<h1>Hola ${nombre}</h1>
+<p>Tu pedido #${pedidoId} está listo.</p>
+<a href="${urlTracking}">Ver estado</a>
+`;</pre>
+        </div>
+      </div>
+
+      <!-- Slide 15: Debugging en n8n -->
+      <div class="slide slide-code" data-slide="15">
+        <h2 class="slide-title">🐛 Debugging en n8n</h2>
+        <div class="step">
+          <pre>
+// Técnica 1: console.log (se ve en el log del workflow)
+console.log("Valor de pedido:", pedido);
+
+// Técnica 2: Devolver datos de debug
+const items = $input.all();
+// ... procesamiento ...
+
+return items.map(item => {
+  return {
+    json: {
+      ...item.json,
+      // Añadir campos de debug
+      _debug: {
+        entrada: item.json,
+        timestamp: new Date().toISOString()
+      }
+    }
+  };
+});
+
+// Técnica 3: Try/catch con detalles
+try {
+  // código
+} catch (error) {
+  console.error("Error:", error.message, error.stack);
+  throw error; // Re-lanzar para que n8n lo capture
+}</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 16: Ejercicio -->
+      <div class="slide slide-exercise" data-slide="16">
+        <h2 class="slide-title">🏋️ EJERCICIO PRÁCTICO</h2>
+        <div class="step">
+          <div class="exercise-box">
+            <pre>
+// CONTEXTO: Normalizar fechas de diferentes APIs
+const eventos = [
+  { nombre: "Evento 1", fecha: "2025-10-15" },          // ISO
+  { nombre: "Evento 2", fecha: "15/10/2025" },          // EU
+  { nombre: "Evento 3", fecha: "2025-10-15T10:30:00Z" } // ISO completo
+];
+
+// TU MISIÓN:
+// 1. Convertir todas a formato "dd/MM/yyyy"
+// 2. Añadir campo "diasHasta" (desde hoy 15/10/2025)
+// 3. Manejar errores con try/catch
+
+// TIP: Usa new Date() y el método de formateo que vimos</pre
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 17: Solución -->
+      <div class="slide slide-solution" data-slide="17">
+        <h2 class="slide-title">✅ SOLUCIÓN EJERCICIO</h2>
+        <div class="step">
+          <pre>
+const hoy = new Date("2025-10-15");
+
+const formatearFecha = (fecha) => {
+  const d = String(fecha.getDate()).padStart(2, '0');
+  const m = String(fecha.getMonth() + 1).padStart(2, '0');
+  const y = fecha.getFullYear();
+  return `${d}/${m}/${y}`;
+};
+
+const procesados = eventos.map(evento => {
+  try {
+    let fecha;
+    
+    if (evento.fecha.includes("T")) {
+      fecha = new Date(evento.fecha); // ISO completo
+    } else if (evento.fecha.includes("-")) {
+      fecha = new Date(evento.fecha); // ISO simple
+    } else {
+      const [d, m, y] = evento.fecha.split("/");
+      fecha = new Date(y, m - 1, d);
+    }
+    
+    const diasHasta = Math.floor((fecha - hoy) / (1000*60*60*24));
+    
+    return {
+      ...evento,
+      fechaFormateada: formatearFecha(fecha),
+      diasHasta
+    };
+  } catch (error) {
+    return { ...evento, error: "Fecha inválida" };
+  }
+});</pre
+          >
+        </div>
+      </div>
+
+      <!-- Slide 18: Resumen -->
+      <div class="slide slide-summary" data-slide="18">
+        <h2 class="slide-title">📝 Resumen Sesión 5</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Código limpio y legible</li>
+              <li>Nombres descriptivos y constantes</li>
+              <li>Comentarios útiles</li>
+              <li>Manejo de fechas (Date nativo)</li>
+              <li>JSON.parse / JSON.stringify</li>
+              <li>Debugging en n8n</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> PROYECTO FINAL - Integración
+              completa 🚀
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">18</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>

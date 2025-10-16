@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Centro de Formación - Slides</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: linear-gradient(135deg, #11aefa 0%, #667eea 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+
+      .container {
+        max-width: 1400px;
+        width: 100%;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 80px;
+      }
+
+      h1 {
+        font-size: 5em;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .subtitle {
+        font-size: 2em;
+        font-weight: 400;
+        opacity: 0.95;
+        margin-bottom: 10px;
+      }
+
+      .description {
+        font-size: 1.4em;
+        font-weight: 300;
+        opacity: 0.9;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .formations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 40px;
+        margin-bottom: 60px;
+      }
+
+      .formation-card {
+        background: white;
+        border-radius: 25px;
+        padding: 50px;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+        transition: all 0.4s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .formation-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+      }
+
+      .formation-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: linear-gradient(90deg, #11aefa, #667eea, #764ba2);
+      }
+
+      .formation-icon {
+        font-size: 5em;
+        margin-bottom: 25px;
+        display: block;
+      }
+
+      .formation-title {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 20px;
+        line-height: 1.2;
+      }
+
+      .formation-description {
+        font-size: 1.4em;
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 25px;
+      }
+
+      .formation-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+      }
+
+      .meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #f0f0f0;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 1.1em;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .formation-highlights {
+        list-style: none;
+        font-size: 1.2em;
+        color: #555;
+        margin-top: 20px;
+      }
+
+      .formation-highlights li {
+        padding: 10px 0;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .formation-highlights li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #11aefa;
+        font-weight: bold;
+        font-size: 1.3em;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #11aefa 0%, #667eea 100%);
+        color: white;
+        padding: 15px 35px;
+        border-radius: 30px;
+        font-size: 1.2em;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
+      }
+
+      .cta-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 25px rgba(17, 174, 250, 0.5);
+      }
+
+      .coming-soon {
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .coming-soon::after {
+        content: "Próximamente";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 15px;
+        font-size: 1.8em;
+        font-weight: 700;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      }
+
+      footer {
+        text-align: center;
+        color: white;
+        font-size: 1.3em;
+        opacity: 0.95;
+        margin-top: 60px;
+      }
+
+      footer p {
+        margin-bottom: 15px;
+      }
+
+      .emoji {
+        font-size: 1.3em;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 3em;
+        }
+
+        .subtitle {
+          font-size: 1.5em;
+        }
+
+        .description {
+          font-size: 1.2em;
+        }
+
+        .formations-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .formation-card {
+          padding: 35px;
+        }
+
+        .formation-title {
+          font-size: 2em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎓 Slides de Sergi Rourera</h1>
+        <p class="subtitle">Slides Interactivas</p>
+        <p class="description">Diseñadas para potenciar el aprendizaje</p>
+      </header>
+
+      <div class="formations-grid">
+        <!-- Formación JavaScript para n8n -->
+        <a
+          href="formacion-inicial-javascript/index.html"
+          class="formation-card"
+        >
+          <span class="formation-icon">💻</span>
+          <h2 class="formation-title">JavaScript para n8n</h2>
+          <p class="formation-description">
+            Aprende JavaScript desde cero aplicado a automatización con n8n. De
+            copia-pega a maestro de la automatización.
+          </p>
+
+          <div class="formation-meta">
+            <span class="meta-item">
+              <span>📊</span>
+              <span>6 sesiones</span>
+            </span>
+            <span class="meta-item">
+              <span>📝</span>
+              <span>104 slides</span>
+            </span>
+            <span class="meta-item">
+              <span>⏱️</span>
+              <span>~8-10 horas</span>
+            </span>
+          </div>
+
+          <ul class="formation-highlights">
+            <li>Fundamentos de JavaScript</li>
+            <li>Funciones y control de flujo</li>
+            <li>Manipulación de arrays y objetos</li>
+            <li>Buenas prácticas de código</li>
+            <li>Proyecto final integrado con n8n</li>
+          </ul>
+
+          <span class="cta-button">Empezar formación →</span>
+        </a>
+
+        <!-- Formación IA Development Day -->
+        <a href="ai-development-day/index.html" class="formation-card">
+          <span class="formation-icon">🚀</span>
+          <h2 class="formation-title">IA Development Day</h2>
+          <p class="formation-description">
+            Domina Cursor como un verdadero developer. Prompts efectivos, Agents
+            autónomos, y MCPs avanzados.
+          </p>
+
+          <div class="formation-meta">
+            <span class="meta-item">
+              <span>📊</span>
+              <span>1 sesión intensiva</span>
+            </span>
+            <span class="meta-item">
+              <span>📝</span>
+              <span>27 slides</span>
+            </span>
+            <span class="meta-item">
+              <span>⏱️</span>
+              <span>~2-3 horas</span>
+            </span>
+          </div>
+
+          <ul class="formation-highlights">
+            <li>Frameworks de prompts (CIFR y BEAR)</li>
+            <li>Agents de Cursor (background, plan, multiple)</li>
+            <li>Cursor Rules y personalización</li>
+            <li>MCPs: integraciones avanzadas</li>
+            <li>Codex de ChatGPT</li>
+          </ul>
+
+          <span class="cta-button">Empezar formación →</span>
+        </a>
+
+        <!-- Placeholder para futuras formaciones -->
+        <div class="formation-card coming-soon">
+          <span class="formation-icon">✨</span>
+          <h2 class="formation-title">Más formaciones</h2>
+          <p class="formation-description">
+            Próximas slides sobre desarrollo, automatización y más...
+          </p>
+
+          <div class="formation-meta">
+            <span class="meta-item">
+              <span>📊</span>
+              <span>X sesiones</span>
+            </span>
+            <span class="meta-item">
+              <span>📝</span>
+              <span>~X slides</span>
+            </span>
+            <span class="meta-item">
+              <span>⏱️</span>
+              <span>~X horas</span>
+            </span>
+          </div>
+
+          <ul class="formation-highlights">
+            <li>TypeScript avanzado</li>
+            <li>Testing automatizado</li>
+            <li>DevOps y CI/CD</li>
+            <li>Arquitectura de software</li>
+          </ul>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          <span class="emoji">🎯</span> <strong>Metodología práctica:</strong>
+          Aprende haciendo
+        </p>
+        <p><span class="emoji">💡</span> Ejercicios aplicados a casos reales</p>
+        <p><span class="emoji">🚀</span> Proyectos finales en cada formación</p>
+        <p style="margin-top: 40px; opacity: 0.8; font-size: 0.9em">
+          Navega con flechas del teclado, espaciador o click en las slides
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IA Development Day - Cursor Master</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        color: #333;
+      }
+
+      #slides-container {
+        height: 100vh;
+        aspect-ratio: 20 / 12;
+        position: relative;
+        background: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 60px;
+      }
+
+      .slide.active {
+        opacity: 1;
+        transform: translateX(0);
+        z-index: 2;
+      }
+
+      .slide.previous {
+        opacity: 0;
+        transform: translateX(-100%);
+        z-index: 1;
+      }
+
+      .slide-title {
+        font-size: 3em;
+        font-weight: 800;
+        color: #667eea;
+        margin-bottom: 40px;
+        line-height: 1.2;
+      }
+
+      .step {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+
+      .step.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .navigation {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        gap: 15px;
+        z-index: 1000;
+      }
+
+      .nav-button {
+        background: #667eea;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .nav-button:hover {
+        background: #5568d3;
+        transform: scale(1.1);
+      }
+
+      .slide-counter {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 25px;
+        z-index: 1000;
+      }
+
+      /* Slide de portada */
+      .slide-cover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-cover .slide-title {
+        color: white;
+        font-size: 5em;
+        margin-bottom: 20px;
+      }
+
+      .slide-cover .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 2em;
+        font-weight: 400;
+        margin-bottom: 10px;
+      }
+
+      .slide-cover .date {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.5em;
+        font-weight: 300;
+      }
+
+      /* Slide de contenido */
+      .slide-content {
+        background: white;
+      }
+
+      .slide-content .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        font-size: 1.5em;
+        line-height: 1.7;
+      }
+
+      .slide-content .content p {
+        margin-bottom: 15px;
+      }
+
+      .slide-content .content ul {
+        margin-left: 30px;
+        list-style-type: none;
+      }
+
+      .slide-content .content ul li {
+        margin-bottom: 15px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .slide-content .content ul li:before {
+        content: "✅";
+        position: absolute;
+        left: -10px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+        border-left: 5px solid #667eea;
+        padding: 25px;
+        border-radius: 10px;
+        font-size: 0.95em;
+      }
+
+      .highlight-box strong {
+        color: #667eea;
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+      }
+
+      /* Slide con código */
+      .slide-code {
+        background: #f8f9fa;
+      }
+
+      .slide-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 25px;
+        border-radius: 15px;
+        font-size: 1.1em;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin-bottom: 15px;
+        font-family: "Consolas", "Monaco", monospace;
+      }
+
+      .slide-code .explanation {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.2em;
+        border-left: 4px solid #667eea;
+      }
+
+      .slide-code .code-comment {
+        color: #6a9955;
+      }
+
+      .slide-code .code-keyword {
+        color: #c586c0;
+      }
+
+      .slide-code .code-string {
+        color: #ce9178;
+      }
+
+      /* Slide de dos columnas */
+      .slide-two-columns {
+        background: #f8f9fa;
+      }
+
+      .slide-two-columns .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        flex: 1;
+      }
+
+      .slide-two-columns .column {
+        background: white;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .slide-two-columns .column h3 {
+        color: #667eea;
+        font-size: 1.8em;
+        margin-bottom: 20px;
+      }
+
+      .slide-two-columns .column p {
+        font-size: 1.3em;
+        line-height: 1.6;
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .slide-two-columns .column ul {
+        list-style: none;
+        font-size: 1.2em;
+      }
+
+      .slide-two-columns .column ul li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+      }
+
+      .slide-two-columns .column ul li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+      }
+
+      /* Slide de ejemplo */
+      .slide-example {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .slide-example .slide-title {
+        color: white;
+      }
+
+      .slide-example .example-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-example .example-title {
+        color: #f5576c;
+        font-size: 1.5em;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .slide-example .example-content {
+        font-size: 1.2em;
+        line-height: 1.6;
+        color: #555;
+      }
+
+      /* Slide de herramienta */
+      .slide-tool {
+        background: white;
+      }
+
+      .slide-tool .tool-icon {
+        font-size: 4em;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .slide-tool .tool-description {
+        font-size: 1.4em;
+        line-height: 1.7;
+        color: #555;
+        margin-bottom: 20px;
+      }
+
+      .slide-tool .tool-features {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 20px;
+      }
+
+      .slide-tool .tool-features h3 {
+        color: #667eea;
+        font-size: 1.6em;
+        margin-bottom: 15px;
+      }
+
+      .slide-tool .tool-features ul {
+        list-style: none;
+        font-size: 1.3em;
+      }
+
+      .slide-tool .tool-features ul li {
+        padding: 10px 0;
+        padding-left: 30px;
+        position: relative;
+      }
+
+      .slide-tool .tool-features ul li:before {
+        content: "✨";
+        position: absolute;
+        left: 0;
+      }
+
+      /* Slide final motivacional */
+      .slide-final {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .slide-final .final-message {
+        color: white;
+        font-size: 3em;
+        font-weight: 700;
+        line-height: 1.5;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .slide-final .final-emoji {
+        font-size: 5em;
+        margin-bottom: 30px;
+        display: block;
+      }
+
+      /* Slide de lista con iconos grandes */
+      .slide-list-icons {
+        background: white;
+      }
+
+      .slide-list-icons .content {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+
+      .slide-list-icons .icon-item {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        border-left: 5px solid #667eea;
+      }
+
+      .slide-list-icons .icon-item .icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .slide-list-icons .icon-item .title {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .slide-list-icons .icon-item .description {
+        font-size: 1.2em;
+        color: #555;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 768px) {
+        .slide {
+          padding: 40px;
+        }
+
+        .slide-title {
+          font-size: 2.5em;
+        }
+
+        .slide-two-columns .columns {
+          grid-template-columns: 1fr;
+        }
+
+        .slide-list-icons .content {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <div class="slide slide-cover active" data-slide="1">
+        <div class="step visible">
+          <h1 class="slide-title">🚀 IA DEVELOPMENT DAY</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Dominando Cursor como verdaderos devs</p>
+        </div>
+        <div class="step">
+          <p class="date">2025 - El año de la IA</p>
+        </div>
+      </div>
+
+      <!-- Slide 2: Introducción -->
+      <div class="slide slide-content" data-slide="2">
+        <h2 class="slide-title">💡 ¿Por qué esto importa?</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>La realidad:</strong> Todos usamos IA, pero ¿la estamos
+              aprovechando al máximo?
+            </p>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>El objetivo de hoy:</strong>
+              Pasar de usar Cursor como un chat más a dominarlo como una
+              extensión de tu cerebro de desarrollador 🧠
+            </div>
+          </div>
+          <div class="step">
+            <p style="font-size: 1.2em; margin-top: 20px">
+              <strong>Agenda:</strong>
+            </p>
+            <ul>
+              <li>Prompts que realmente funcionan</li>
+              <li>Herramientas avanzadas de Cursor</li>
+              <li>Integraciones que cambiarán tu workflow</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Introducción Prompts -->
+      <div class="slide slide-content" data-slide="3">
+        <h2 class="slide-title">📝 El arte del prompt perfecto</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>Problema común:</strong> "No funciona, no entiendo qué
+              quiero"
+            </p>
+          </div>
+          <div class="step">
+            <p>
+              <strong>Solución:</strong> Metodologías estructuradas para
+              comunicarte con la IA
+            </p>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>Dos frameworks probados:</strong>
+              <br />• CIFR - Para tareas de desarrollo<br />
+              • BEAR - Para ejemplos y aprendizaje
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: CIFR Framework -->
+      <div class="slide slide-two-columns" data-slide="4">
+        <h2 class="slide-title">🎯 CIFR Framework</h2>
+        <div class="columns">
+          <div class="step column">
+            <h3>📋 La estructura</h3>
+            <ul>
+              <li><strong>C</strong>ontexto: Dónde estás</li>
+              <li><strong>I</strong>ntención: Qué quieres lograr</li>
+              <li><strong>F</strong>ormato: Cómo lo quieres</li>
+              <li><strong>R</strong>evisión: Qué validar</li>
+            </ul>
+          </div>
+          <div class="step column">
+            <h3>✨ Por qué funciona</h3>
+            <p>
+              Le das a la IA toda la información necesaria en un orden lógico
+              que facilita generar código exactamente como lo necesitas.
+            </p>
+            <p style="margin-top: 15px">
+              <strong>Resultado:</strong> Menos iteraciones, más acierto en el
+              primer intento.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: CIFR Ejemplo -->
+      <div class="slide slide-example" data-slide="5">
+        <h2 class="slide-title">💻 CIFR - Ejemplo real</h2>
+        <div class="step">
+          <div class="example-box">
+            <div class="example-title">🎯 Prompt estructurado con CIFR:</div>
+            <div class="example-content">
+              <p>
+                <strong>📍 CONTEXTO:</strong><br />
+                Estoy trabajando en un sistema de notificaciones para usuarios.
+                Tengo un array de usuarios con emails y preferencias.
+              </p>
+              <p style="margin-top: 15px">
+                <strong>🎯 INTENCIÓN:</strong><br />
+                Necesito una función que filtre usuarios que tienen
+                notificaciones activadas y envíe un email a cada uno usando
+                nuestro servicio de email.
+              </p>
+              <p style="margin-top: 15px">
+                <strong>📐 FORMATO:</strong><br />
+                - Función async en TypeScript<br />
+                - Con tipos bien definidos<br />
+                - Manejo de errores con try/catch<br />
+                - Logging de cada acción
+              </p>
+              <p style="margin-top: 15px">
+                <strong>✅ REVISIÓN:</strong><br />
+                Verifica que se manejen casos donde el email falla sin romper el
+                loop para los demás usuarios.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 6: CIFR Resultado -->
+      <div class="slide slide-code" data-slide="6">
+        <h2 class="slide-title">✨ Resultado del prompt CIFR</h2>
+        <div class="step">
+          <pre>
+<span class="code-comment">// Tipos bien definidos</span>
+<span class="code-keyword">interface</span> User {
+  id: string;
+  email: string;
+  notificationsEnabled: boolean;
+}
+
+<span class="code-keyword">async function</span> sendNotifications(users: User[]) {
+  <span class="code-comment">// Filtrar usuarios con notificaciones activadas</span>
+  <span class="code-keyword">const</span> eligibleUsers = users.filter(
+    u => u.notificationsEnabled
+  );
+  
+  console.log(<span class="code-string">`Enviando a ${eligibleUsers.length} usuarios`</span>);
+  
+  <span class="code-keyword">for</span> (<span class="code-keyword">const</span> user <span class="code-keyword">of</span> eligibleUsers) {
+    <span class="code-keyword">try</span> {
+      <span class="code-keyword">await</span> emailService.send(user.email);
+      console.log(<span class="code-string">`✅ Enviado a ${user.email}`</span>);
+    } <span class="code-keyword">catch</span> (error) {
+      console.error(<span class="code-string">`❌ Error con ${user.email}:`, error);
+      <span class="code-comment">// Continúa con el siguiente</span>
+    }
+  }
+}</pre>
+        </div>
+        <div class="step">
+          <div class="explanation">
+            🎯 <strong>Perfecto en el primer intento:</strong> Tipos,
+            filtrado, manejo de errores, logging... todo lo que pedimos.
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 7: BEAR Framework -->
+      <div class="slide slide-two-columns" data-slide="7">
+        <h2 class="slide-title">🐻 BEAR Framework</h2>
+        <div class="columns">
+          <div class="step column">
+            <h3>📋 La estructura</h3>
+            <ul>
+              <li><strong>B</strong>ackground: Contexto técnico</li>
+              <li><strong>E</strong>xample: Un ejemplo claro</li>
+              <li><strong>A</strong>ction: Qué hacer</li>
+              <li><strong>R</strong>esult: Output esperado</li>
+            </ul>
+          </div>
+          <div class="step column">
+            <h3>🎯 Cuándo usarlo</h3>
+            <p>
+              Ideal cuando necesitas que la IA aprenda de un patrón o cuando
+              quieres replicar un estilo específico de código.
+            </p>
+            <p style="margin-top: 15px">
+              <strong>Power move:</strong> Muy útil para transformaciones de
+              datos o migraciones.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 8: BEAR Ejemplo -->
+      <div class="slide slide-example" data-slide="8">
+        <h2 class="slide-title">🐻 BEAR - Ejemplo real</h2>
+        <div class="step">
+          <div class="example-box">
+            <div class="example-title">🎯 Prompt estructurado con BEAR:</div>
+            <div class="example-content">
+              <p>
+                <strong>🎓 BACKGROUND:</strong><br />
+                Estamos migrando de un sistema de configuración JSON antiguo a
+                uno nuevo basado en TypeScript. Tenemos 50+ archivos de
+                configuración que migrar.
+              </p>
+              <p style="margin-top: 15px">
+                <strong>📝 EXAMPLE:</strong><br />
+                Formato antiguo:<br />
+                <code
+                  style="
+                    background: #f0f0f0;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                  "
+                  >{ "feature": "notifications", "enabled": true, "config": {
+                  "email": true } }</code
+                >
+              </p>
+              <p style="margin-top: 15px">
+                <strong>⚡ ACTION:</strong><br />
+                Crea una función que transforme este formato al nuevo esquema
+                TypeScript usando clases y decorators.
+              </p>
+              <p style="margin-top: 15px">
+                <strong>🎯 RESULT:</strong><br />
+                Una clase FeatureConfig con tipo seguro y validaciones
+                automáticas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 9: BEAR Resultado -->
+      <div class="slide slide-code" data-slide="9">
+        <h2 class="slide-title">✨ Resultado del prompt BEAR</h2>
+        <div class="step">
+          <pre>
+<span class="code-comment">// Transformación automática JSON → TypeScript</span>
+<span class="code-keyword">class</span> FeatureConfig {
+  @IsString()
+  feature: string;
+  
+  @IsBoolean()
+  enabled: boolean;
+  
+  @ValidateNested()
+  config: {
+    email: boolean;
+  };
+  
+  <span class="code-keyword">constructor</span>(json: any) {
+    this.feature = json.feature;
+    this.enabled = json.enabled;
+    this.config = json.config;
+    this.validate();
+  }
+  
+  <span class="code-keyword">private</span> validate() {
+    <span class="code-keyword">const</span> errors = validateSync(this);
+    <span class="code-keyword">if</span> (errors.length > 0) {
+      <span class="code-keyword">throw new</span> Error(<span class="code-string">`Invalid config: ${errors}`</span>);
+    }
+  }
+}</pre>
+        </div>
+        <div class="step">
+          <div class="explanation">
+            🐻 <strong>Con un ejemplo claro:</strong> La IA entendió
+            perfectamente el patrón y generó la estructura completa con
+            validaciones.
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 10: Herramientas Cursor - Intro -->
+      <div class="slide slide-content" data-slide="10">
+        <h2 class="slide-title">🔧 Herramientas de Cursor</h2>
+        <div class="content">
+          <div class="step">
+            <div class="highlight-box">
+              <strong>Más allá del chat básico:</strong>
+              Cursor tiene herramientas potentes que el 90% de usuarios no
+              aprovecha
+            </div>
+          </div>
+          <div class="step">
+            <p style="font-size: 1.3em; margin-top: 25px">
+              <strong>Vamos a cubrir:</strong>
+            </p>
+            <ul>
+              <li>🤖 Agents (el cerebro que trabaja por ti)</li>
+              <li>🌍 Background Agent con búsqueda web</li>
+              <li>📊 Plan Mode (para tareas complejas)</li>
+              <li>👥 Multiple-agent (paralelización)</li>
+              <li>🛡️ Allowlist (seguridad)</li>
+              <li>📏 Cursor Rules (tu manual de estilo)</li>
+              <li>📂 MCPs (integraciones poderosas)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 11: Agent -->
+      <div class="slide slide-tool" data-slide="11">
+        <h2 class="slide-title">🤖 Agent de Cursor</h2>
+        <div class="step">
+          <span class="tool-icon">🤖</span>
+          <p class="tool-description">
+            <strong>¿Qué es?</strong> Un asistente autónomo que puede leer
+            archivos, hacer cambios, ejecutar comandos y razonar sobre tu
+            código sin supervisión constante.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>🎯 Capacidades del Agent</h3>
+            <ul>
+              <li>
+                <strong>Autonomía:</strong> Toma decisiones sobre qué archivos
+                leer/modificar
+              </li>
+              <li>
+                <strong>Contexto completo:</strong> Entiende la estructura del
+                proyecto
+              </li>
+              <li>
+                <strong>Iteración:</strong> Puede probar, fallar y corregir
+                automáticamente
+              </li>
+              <li>
+                <strong>Multi-archivo:</strong> Hace cambios coordinados en
+                múltiples archivos
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>💡 Caso de uso real:</strong> "Refactoriza este componente
+            para usar hooks en vez de clases, actualiza todos los archivos que
+            lo importan y ajusta los tests"
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 12: Background Agent -->
+      <div class="slide slide-tool" data-slide="12">
+        <h2 class="slide-title">🌍 Background Agent (Web)</h2>
+        <div class="step">
+          <span class="tool-icon">🌐</span>
+          <p class="tool-description">
+            <strong>El superpoder:</strong> El Agent puede buscar en internet
+            en tiempo real para traer información actualizada, documentación de
+            librerías, y soluciones a problemas específicos.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>🚀 Qué puedes hacer</h3>
+            <ul>
+              <li>
+                <strong>Documentación al instante:</strong> "Cómo usar la nueva
+                API de Next.js 15"
+              </li>
+              <li>
+                <strong>Debugging:</strong> Busca soluciones a errores
+                específicos
+              </li>
+              <li>
+                <strong>Best practices:</strong> Consulta las mejores prácticas
+                actuales
+              </li>
+              <li>
+                <strong>Librerías nuevas:</strong> Aprende sobre paquetes que
+                no conoce
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>🔥 Ejemplo:</strong> "Busca cómo implementar autenticación
+            con PassKeys en 2025 y aplícalo a nuestro proyecto"
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 13: Plan Mode -->
+      <div class="slide slide-tool" data-slide="13">
+        <h2 class="slide-title">📊 Plan Mode</h2>
+        <div class="step">
+          <span class="tool-icon">📋</span>
+          <p class="tool-description">
+            <strong>Para tareas complejas:</strong> Antes de ejecutar, el Agent
+            crea un plan detallado de todos los pasos que va a realizar. Tú lo
+            revisas y apruebas.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>✅ Ventajas del Plan Mode</h3>
+            <ul>
+              <li>
+                <strong>Visibilidad:</strong> Ves exactamente qué va a hacer
+                antes de hacerlo
+              </li>
+              <li>
+                <strong>Control:</strong> Puedes ajustar el plan antes de
+                ejecutar
+              </li>
+              <li>
+                <strong>Aprendizaje:</strong> Entiendes la estrategia del Agent
+              </li>
+              <li>
+                <strong>Seguridad:</strong> Evitas cambios no deseados en
+                tareas críticas
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>💼 Caso de uso:</strong> Migraciones grandes,
+            refactorizaciones críticas, o cuando trabajas en producción
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 14: Multiple Agent -->
+      <div class="slide slide-tool" data-slide="14">
+        <h2 class="slide-title">👥 Multiple-agent</h2>
+        <div class="step">
+          <span class="tool-icon">🎭</span>
+          <p class="tool-description">
+            <strong>Paralelización inteligente:</strong> Puedes ejecutar
+            múltiples Agents a la vez, cada uno trabajando en tareas diferentes
+            de forma simultánea.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>⚡ Productividad x10</h3>
+            <ul>
+              <li>
+                <strong>Agent 1:</strong> Refactoriza el backend mientras...
+              </li>
+              <li>
+                <strong>Agent 2:</strong> Actualiza los tests y...
+              </li>
+              <li>
+                <strong>Agent 3:</strong> Genera documentación
+              </li>
+              <li>
+                <strong>Resultado:</strong> 3 tareas terminadas en el tiempo de
+                1
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>🎯 Pro tip:</strong> Usa esto cuando tienes tareas
+            independientes. Ej: "Agent 1: implementa feature X" y "Agent 2:
+            arregla bugs en la lista"
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 15: Allowlist -->
+      <div class="slide slide-tool" data-slide="15">
+        <h2 class="slide-title">🛡️ Allowlist</h2>
+        <div class="step">
+          <span class="tool-icon">🔐</span>
+          <p class="tool-description">
+            <strong>Control de seguridad:</strong> Define exactamente qué
+            archivos, carpetas o comandos puede tocar el Agent. Lo demás está
+            prohibido.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>🎯 Configuración inteligente</h3>
+            <ul>
+              <li>
+                <strong>Por carpetas:</strong> "Solo puedes modificar /src y
+                /tests"
+              </li>
+              <li>
+                <strong>Por tipo:</strong> "No toques archivos .env o .config"
+              </li>
+              <li>
+                <strong>Por comandos:</strong> "No ejecutes npm install sin
+                permiso"
+              </li>
+              <li>
+                <strong>Whitelist:</strong> Archivos críticos quedan protegidos
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>💼 Escenario real:</strong> Trabajas en un monorepo grande
+            pero solo quieres que el Agent modifique tu microservicio, no todo
+            el repo
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 16: Cursor Rules - Intro -->
+      <div class="slide slide-content" data-slide="16">
+        <h2 class="slide-title">📏 Cursor Rules</h2>
+        <div class="content">
+          <div class="step">
+            <div class="highlight-box">
+              <strong>Tu manual de instrucciones personalizado:</strong>
+              Configura una vez, aplica siempre. El Agent seguirá tus reglas en
+              cada conversación.
+            </div>
+          </div>
+          <div class="step">
+            <p style="font-size: 1.3em; margin-top: 25px">
+              <strong>Dos tipos de Cursor Rules:</strong>
+            </p>
+          </div>
+          <div class="step">
+            <ul style="font-size: 1.3em">
+              <li>
+                <strong>📚 Guidelines:</strong> Estándares de código, patrones,
+                convenciones
+              </li>
+              <li>
+                <strong>🎯 Prompts:</strong> Instrucciones específicas de cómo
+                trabajar
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 17: Cursor Rules - Guidelines -->
+      <div class="slide slide-code" data-slide="17">
+        <h2 class="slide-title">📚 Cursor Rules: Guidelines</h2>
+        <div class="step">
+          <pre>
+<span class="code-comment">// .cursorrules - Guidelines para el proyecto</span>
+
+# Estándares de código
+- Usa TypeScript estricto (strict mode)
+- Nombres de variables en camelCase
+- Componentes React en PascalCase
+- Archivos de tests con .test.ts
+
+# Arquitectura
+- Sigue clean architecture
+- Separa lógica de negocio de UI
+- Usa dependency injection
+
+# Imports
+- Imports absolutos con @/ alias
+- Agrupa: externos → internos → tipos
+
+# Testing
+- Test unitario para cada función pública
+- Coverage mínimo 80%
+- Usa testing-library para React</pre>
+        </div>
+        <div class="step">
+          <div class="explanation">
+            💡 El Agent generará código siguiendo SIEMPRE estas reglas sin que
+            las repitas
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 18: Cursor Rules - Prompts -->
+      <div class="slide slide-code" data-slide="18">
+        <h2 class="slide-title">🎯 Cursor Rules: Prompts</h2>
+        <div class="step">
+          <pre>
+<span class="code-comment">// .cursorrules - Instrucciones de comportamiento</span>
+
+# Commits
+Los mensajes de commit deben ser súper cortos 
+y empezar con el nombre de la branch.
+Ejemplo: "feature/auth: add login validation"
+
+# Database local
+Para conectar a DB local usa estas credenciales:
+DB_HOST=db.housfy.test
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=root
+
+# Workflow
+1. Siempre crea tests antes de implementar
+2. Si encuentras código deprecated, refactoriza
+3. Documenta funciones públicas con JSDoc
+4. Usa emojis en las respuestas (como hace Sergi 😊)</pre>
+        </div>
+        <div class="step">
+          <div class="explanation">
+            🎯 Instrucciones específicas de TU forma de trabajar. ¡Personaliza
+            al máximo!
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 19: MCPs Intro -->
+      <div class="slide slide-content" data-slide="19">
+        <h2 class="slide-title">📂 MCPs - Model Context Protocol</h2>
+        <div class="content">
+          <div class="step">
+            <div class="highlight-box">
+              <strong>El verdadero game changer:</strong>
+              MCPs permiten que Cursor se conecte con servicios externos en
+              tiempo real. Es como darle superpoderes al Agent.
+            </div>
+          </div>
+          <div class="step">
+            <p style="font-size: 1.3em; margin-top: 25px">
+              <strong>¿Qué son los MCPs?</strong>
+            </p>
+            <p style="font-size: 1.2em; color: #555">
+              Protocolos estandarizados que conectan Cursor con APIs externas,
+              bases de datos, browsers, herramientas... básicamente cualquier
+              cosa.
+            </p>
+          </div>
+          <div class="step">
+            <p style="font-size: 1.3em; margin-top: 25px">
+              <strong>Vamos a ver:</strong>
+            </p>
+            <ul style="font-size: 1.2em">
+              <li>🌐 Browser MCP (integrado en Cursor)</li>
+              <li>🔌 Conectar MCPs externos</li>
+              <li>🛠️ Crear MCPs custom para developers</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 20: MCP Browser -->
+      <div class="slide slide-tool" data-slide="20">
+        <h2 class="slide-title">🌐 MCP: Browser</h2>
+        <div class="step">
+          <span class="tool-icon">🌐</span>
+          <p class="tool-description">
+            <strong>Ya integrado en Cursor:</strong> El Agent puede controlar
+            un browser headless, navegar páginas web, llenar formularios,
+            scrappear datos...
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>🎯 Casos de uso reales</h3>
+            <ul>
+              <li>
+                <strong>Testing E2E automático:</strong> "Navega a login,
+                rellena el form, verifica el resultado"
+              </li>
+              <li>
+                <strong>Web scraping:</strong> "Extrae los precios de esta
+                página y guárdalos en CSV"
+              </li>
+              <li>
+                <strong>Investigación:</strong> "Busca en la documentación de X
+                cómo implementar Y"
+              </li>
+              <li>
+                <strong>Screenshots:</strong> "Captura cómo se ve la app en
+                mobile y desktop"
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>🔥 Ejemplo potente:</strong> "Abre nuestra app en
+            producción, haz el user flow completo y dime si hay errores en
+            consola"
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 21: MCPs Externos -->
+      <div class="slide slide-list-icons" data-slide="21">
+        <h2 class="slide-title">🔌 MCPs: Conecta cualquiera</h2>
+        <div class="content">
+          <div class="step icon-item">
+            <span class="icon">📊</span>
+            <div class="title">Databases</div>
+            <div class="description">
+              PostgreSQL, MongoDB, Redis... consulta datos directamente desde
+              Cursor
+            </div>
+          </div>
+          <div class="step icon-item">
+            <span class="icon">☁️</span>
+            <div class="title">Cloud Services</div>
+            <div class="description">
+              AWS, GCP, Azure... gestiona infraestructura sin salir del editor
+            </div>
+          </div>
+          <div class="step icon-item">
+            <span class="icon">📨</span>
+            <div class="title">APIs</div>
+            <div class="description">
+              Slack, GitHub, Notion... integra con tus herramientas diarias
+            </div>
+          </div>
+          <div class="step icon-item">
+            <span class="icon">🔍</span>
+            <div class="title">Search Engines</div>
+            <div class="description">
+              Google, Algolia... busca información en tiempo real
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 22: MCP Custom para Developers -->
+      <div class="slide slide-example" data-slide="22">
+        <h2 class="slide-title">🛠️ MCP Custom para Developers</h2>
+        <div class="step">
+          <div class="example-box">
+            <div class="example-title">
+              💡 Imagina crear un MCP para tu equipo:
+            </div>
+            <div class="example-content">
+              <p>
+                <strong>🎯 Ejecutar flows de n8n:</strong><br />
+                "Ejecuta el flow de notificaciones con estos datos de test"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>📋 Gestionar Jira:</strong><br />
+                "Crea un ticket en Jira para este bug que acabas de encontrar,
+                asígnalo al equipo de backend"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>🌍 Crear traducciones:</strong><br />
+                "Añade este nuevo texto al sistema de i18n y crea traducciones
+                en ES, EN, FR"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>📊 Analytics:</strong><br />
+                "Muéstrame el uso de esta API en los últimos 7 días desde
+                Datadog"
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>🚀 El futuro:</strong> Cursor como único punto de entrada
+            para TODO tu workflow de desarrollo
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 23: MCP Custom - Ejemplo técnico -->
+      <div class="slide slide-code" data-slide="23">
+        <h2 class="slide-title">🔧 MCP Custom: Código base</h2>
+        <div class="step">
+          <pre>
+<span class="code-comment">// mcp-n8n-server.ts - Ejemplo simplificado</span>
+<span class="code-keyword">import</span> { MCPServer } <span class="code-keyword">from</span> <span class="code-string">"@modelcontextprotocol/sdk"</span>;
+
+<span class="code-keyword">const</span> server = <span class="code-keyword">new</span> MCPServer({
+  name: <span class="code-string">"n8n-integration"</span>,
+  version: <span class="code-string">"1.0.0"</span>
+});
+
+<span class="code-comment">// Definir herramienta: ejecutar workflow</span>
+server.addTool({
+  name: <span class="code-string">"execute_n8n_workflow"</span>,
+  description: <span class="code-string">"Ejecuta un workflow de n8n"</span>,
+  parameters: {
+    workflowId: <span class="code-string">"string"</span>,
+    data: <span class="code-string">"object"</span>
+  },
+  <span class="code-keyword">handler: async</span> ({ workflowId, data }) => {
+    <span class="code-keyword">const</span> result = <span class="code-keyword">await</span> fetch(
+      <span class="code-string">`https://n8n.housfy.com/webhook/${workflowId}`</span>,
+      { method: <span class="code-string">"POST"</span>, body: JSON.stringify(data) }
+    );
+    <span class="code-keyword">return</span> result.json();
+  }
+});
+
+server.start();</pre>
+        </div>
+        <div class="step">
+          <div class="explanation">
+            🎯 Con ~30 líneas de código tienes un MCP funcional. Luego lo
+            configuras en Cursor y... ¡magia!
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 24: Codex -->
+      <div class="slide slide-tool" data-slide="24">
+        <h2 class="slide-title">📝 Codex (ChatGPT)</h2>
+        <div class="step">
+          <span class="tool-icon">📚</span>
+          <p class="tool-description">
+            <strong>No es de Cursor, pero es oro:</strong> Codex de ChatGPT es
+            un sistema de memoria compartida donde guardas snippets,
+            configuraciones, patrones... y los reutilizas en todos tus chats.
+          </p>
+        </div>
+        <div class="step">
+          <div class="tool-features">
+            <h3>💎 Por qué es increíble</h3>
+            <ul>
+              <li>
+                <strong>Memoria persistente:</strong> Ya no explicas lo mismo
+                100 veces
+              </li>
+              <li>
+                <strong>Snippets reutilizables:</strong> "Usa mi configuración
+                de ESLint guardada"
+              </li>
+              <li>
+                <strong>Patrones de tu código:</strong> "Sigue el patrón de
+                autenticación que tengo en Codex"
+              </li>
+              <li>
+                <strong>Cross-projects:</strong> Reutiliza conocimiento entre
+                proyectos
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="highlight-box" style="margin-top: 20px">
+            <strong>💡 Pro tip:</strong> Guarda en Codex: configs, arquitectura
+            de tus proyectos, decisiones técnicas, y tus reglas de negocio
+            complejas
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 25: Codex - Ejemplo uso -->
+      <div class="slide slide-example" data-slide="25">
+        <h2 class="slide-title">📚 Codex - Casos de uso</h2>
+        <div class="step">
+          <div class="example-box">
+            <div class="example-title">
+              💼 Qué guardar en tu Codex personal:
+            </div>
+            <div class="example-content">
+              <p>
+                <strong>🏗️ Arquitectura del proyecto:</strong><br />
+                "Nuestra app usa clean architecture con capas: domain,
+                application, infrastructure. Domain no puede importar de las
+                otras"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>🎨 Convenciones de diseño:</strong><br />
+                "Todos los botones primarios usan el color #667eea, border
+                radius de 8px, shadow-sm en hover"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>📋 Reglas de negocio:</strong><br />
+                "Los usuarios premium tienen acceso a X, Y, Z. La lógica de
+                validación está en UserPermissionsService"
+              </p>
+              <p style="margin-top: 15px">
+                <strong>🔧 Setup del proyecto:</strong><br />
+                "Para local: npm install, copiar .env.example, ejecutar docker
+                compose, seed de base de datos"
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 26: Recap -->
+      <div class="slide slide-content" data-slide="26">
+        <h2 class="slide-title">📋 Recap: Lo que hemos visto</h2>
+        <div class="content">
+          <div class="step">
+            <div class="highlight-box">
+              <strong>✅ Prompts que funcionan:</strong>
+              <br />• CIFR para desarrollo estructurado<br />
+              • BEAR para aprendizaje por ejemplos
+            </div>
+          </div>
+          <div class="step">
+            <div class="highlight-box" style="margin-top: 15px">
+              <strong>✅ Herramientas de Cursor:</strong>
+              <br />• Agent autónomo y multi-file<br />
+              • Background Agent con búsqueda web<br />
+              • Plan Mode para tareas complejas<br />
+              • Multiple-agent para paralelizar<br />
+              • Allowlist para seguridad
+            </div>
+          </div>
+          <div class="step">
+            <div class="highlight-box" style="margin-top: 15px">
+              <strong>✅ Personalización:</strong>
+              <br />• Cursor Rules (guidelines + prompts)<br />
+              • MCPs para integrar herramientas<br />
+              • Codex para memoria persistente
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 27: Final Motivacional -->
+      <div class="slide slide-final" data-slide="27">
+        <div class="step visible">
+          <span class="final-emoji">💬</span>
+        </div>
+        <div class="step">
+          <p class="final-message">
+            Si no es fa servir la IA,<br />
+            o no li estem traient profit,<br />
+            <strong>avui és el dia!</strong>
+          </p>
+        </div>
+        <div class="step">
+          <p style="color: white; font-size: 1.8em; margin-top: 40px">
+            🚀 Ahora a aplicarlo en tu día a día
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación -->
+    <div class="navigation">
+      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
+      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
+    </div>
+
+    <!-- Contador -->
+    <div class="slide-counter">
+      <span id="current-slide">1</span> / <span id="total-slides">27</span>
+    </div>
+
+    <script>
+      class SlideShow {
+        constructor() {
+          this.slides = document.querySelectorAll(".slide");
+          this.currentSlideIndex = 0;
+          this.currentStepIndex = 0;
+          this.totalSlides = this.slides.length;
+          this.init();
+        }
+
+        init() {
+          document.getElementById("total-slides").textContent =
+            this.totalSlides;
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.next());
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", () => this.previous());
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") {
+              e.preventDefault();
+              this.next();
+            } else if (e.key === "ArrowLeft") {
+              e.preventDefault();
+              this.previous();
+            }
+          });
+
+          document
+            .getElementById("slides-container")
+            .addEventListener("click", (e) => {
+              if (!e.target.closest(".nav-button")) {
+                this.next();
+              }
+            });
+
+          this.showSlide(0);
+        }
+
+        getCurrentSlide() {
+          return this.slides[this.currentSlideIndex];
+        }
+
+        getSteps(slide) {
+          return slide.querySelectorAll(".step");
+        }
+
+        next() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            this.currentStepIndex++;
+            steps[this.currentStepIndex].classList.add("visible");
+          } else if (this.currentSlideIndex < this.totalSlides - 1) {
+            this.goToSlide(this.currentSlideIndex + 1);
+          }
+        }
+
+        previous() {
+          const currentSlide = this.getCurrentSlide();
+          const steps = this.getSteps(currentSlide);
+
+          if (this.currentStepIndex > 0) {
+            steps[this.currentStepIndex].classList.remove("visible");
+            this.currentStepIndex--;
+          } else if (this.currentSlideIndex > 0) {
+            this.goToSlide(this.currentSlideIndex - 1, true);
+          }
+        }
+
+        goToSlide(index, showAllSteps = false) {
+          if (index < 0 || index >= this.totalSlides) return;
+
+          const currentSlide = this.getCurrentSlide();
+          currentSlide.classList.remove("active");
+          currentSlide.classList.add("previous");
+
+          const currentSteps = this.getSteps(currentSlide);
+          currentSteps.forEach((step) => step.classList.remove("visible"));
+
+          this.currentSlideIndex = index;
+
+          const newSlide = this.getCurrentSlide();
+          newSlide.classList.remove("previous");
+          newSlide.classList.add("active");
+
+          const newSteps = this.getSteps(newSlide);
+
+          if (showAllSteps) {
+            this.currentStepIndex = newSteps.length - 1;
+            newSteps.forEach((step) => step.classList.add("visible"));
+          } else {
+            this.currentStepIndex = 0;
+            if (newSteps.length > 0) {
+              newSteps[0].classList.add("visible");
+            }
+          }
+
+          this.updateCounter();
+        }
+
+        showSlide(index) {
+          this.goToSlide(index);
+        }
+
+        updateCounter() {
+          document.getElementById("current-slide").textContent =
+            this.currentSlideIndex + 1;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        new SlideShow();
+      });
+    </script>
+  </body>
+</html>
+

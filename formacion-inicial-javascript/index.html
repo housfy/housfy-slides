@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formación JavaScript para n8n</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Manrope", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+
+      .container {
+        max-width: 1200px;
+        width: 100%;
+      }
+
+      header {
+        text-align: center;
+        color: white;
+        margin-bottom: 60px;
+      }
+
+      h1 {
+        font-size: 4em;
+        font-weight: 800;
+        margin-bottom: 20px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .subtitle {
+        font-size: 1.8em;
+        font-weight: 400;
+        opacity: 0.95;
+      }
+
+      .sessions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+      }
+
+      .session-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .session-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .session-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, #11aefa, #667eea);
+      }
+
+      .session-number {
+        font-size: 3em;
+        font-weight: 800;
+        color: #11aefa;
+        margin-bottom: 10px;
+      }
+
+      .session-title {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .session-description {
+        font-size: 1.2em;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .session-topics {
+        list-style: none;
+        font-size: 1em;
+        color: #555;
+      }
+
+      .session-topics li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+      }
+
+      .session-topics li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #11aefa;
+        font-weight: bold;
+      }
+
+      .session-duration {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 15px;
+      }
+
+      footer {
+        text-align: center;
+        color: white;
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      footer p {
+        margin-bottom: 10px;
+      }
+
+      .emoji {
+        font-size: 1.5em;
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5em;
+        }
+
+        .subtitle {
+          font-size: 1.3em;
+        }
+
+        .sessions-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .session-card {
+          padding: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>💻 Formación JavaScript para n8n</h1>
+        <p class="subtitle">De copia-pega a maestro de automatización</p>
+      </header>
+
+      <div class="sessions-grid">
+        <!-- Sesión 1 -->
+        <a href="session1.html" class="session-card">
+          <div class="session-number">01</div>
+          <h2 class="session-title">Fundamentos y mentalidad JS</h2>
+          <p class="session-description">
+            Construye la base mental del lenguaje y entiende cómo funciona
+            JavaScript en n8n.
+          </p>
+          <ul class="session-topics">
+            <li>Tipos de datos y variables</li>
+            <li>Arrays y objetos</li>
+            <li>Operadores y comparaciones</li>
+          </ul>
+          <span class="session-duration">⏱️ 17 slides</span>
+        </a>
+
+        <!-- Sesión 2 -->
+        <a href="session2.html" class="session-card">
+          <div class="session-number">02</div>
+          <h2 class="session-title">Funciones y scope</h2>
+          <p class="session-description">
+            Aprende a crear tus propias herramientas reutilizables con
+            funciones.
+          </p>
+          <ul class="session-topics">
+            <li>Funciones tradicionales y flecha</li>
+            <li>Parámetros y return</li>
+            <li>Scope y closures</li>
+          </ul>
+          <span class="session-duration">⏱️ 16 slides</span>
+        </a>
+
+        <!-- Sesión 3 -->
+        <a href="session3.html" class="session-card">
+          <div class="session-number">03</div>
+          <h2 class="session-title">Objetos y Arrays a fondo</h2>
+          <p class="session-description">
+            Domina las estructuras clave para transformar datos en n8n.
+          </p>
+          <ul class="session-topics">
+            <li>.map(), .filter(), .reduce()</li>
+            <li>Destructuring y spread operator</li>
+            <li>Encadenar transformaciones</li>
+          </ul>
+          <span class="session-duration">⏱️ 17 slides</span>
+        </a>
+
+        <!-- Sesión 4 -->
+        <a href="session4.html" class="session-card">
+          <div class="session-number">04</div>
+          <h2 class="session-title">Control de flujo</h2>
+          <p class="session-description">
+            Controla decisiones y bucles para crear lógica compleja.
+          </p>
+          <ul class="session-topics">
+            <li>if/else, switch, ternario</li>
+            <li>Bucles: for, for...of, while</li>
+            <li>try/catch para manejo de errores</li>
+          </ul>
+          <span class="session-duration">⏱️ 17 slides</span>
+        </a>
+
+        <!-- Sesión 5 -->
+        <a href="session5.html" class="session-card">
+          <div class="session-number">05</div>
+          <h2 class="session-title">Buenas prácticas y librerías</h2>
+          <p class="session-description">
+            Escribe código limpio y aprende herramientas útiles del día a día.
+          </p>
+          <ul class="session-topics">
+            <li>Código limpio y legible</li>
+            <li>Manejo de fechas y JSON</li>
+            <li>Debugging en n8n</li>
+          </ul>
+          <span class="session-duration">⏱️ 18 slides</span>
+        </a>
+
+        <!-- Sesión 6 -->
+        <a href="session6.html" class="session-card">
+          <div class="session-number">06</div>
+          <h2 class="session-title">Integración total con n8n</h2>
+          <p class="session-description">
+            Consolida todo en un proyecto real de principio a fin.
+          </p>
+          <ul class="session-topics">
+            <li>Variables globales de n8n</li>
+            <li>Salidas múltiples</li>
+            <li>Proyecto final completo</li>
+          </ul>
+          <span class="session-duration">⏱️ 19 slides</span>
+        </a>
+      </div>
+
+      <footer>
+        <p>
+          <span class="emoji">🚀</span> <strong>Metodología:</strong> 30% teoría
+          + 70% práctica
+        </p>
+        <p>
+          <span class="emoji">💡</span> Cada sesión incluye ejercicios aplicados
+          a n8n
+        </p>
+        <p>
+          <span class="emoji">🎯</span> Objetivo: Automatización sin límites
+        </p>
+        <p style="margin-top: 30px; opacity: 0.8">
+          Navegación: Usa las flechas del teclado, espaciador o haz clic
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
