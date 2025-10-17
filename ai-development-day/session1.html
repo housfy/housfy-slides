@@ -556,25 +556,38 @@
             <div class="example-content">
               <p>
                 <strong>📍 CONTEXTO:</strong><br />
-                Sistema de contratos de alquiler en PHP 8.1 con arquitectura hexagonal. Tenemos GetRentalReservationContractValidationsConverter y GetRentalLeasingContractValidationsConverter con validaciones duplicadas. Ya existe ValidationStrategy + ValidationManager para la categoría "documentation" (IT-9176). Queremos aplicar el mismo patrón a "economic".
+                Sistema de contratos de alquiler en PHP 8.1 con arquitectura
+                hexagonal. Tenemos
+                GetRentalReservationContractValidationsConverter y
+                GetRentalLeasingContractValidationsConverter con validaciones
+                duplicadas. Ya existe ValidationStrategy + ValidationManager
+                para la categoría "documentation" (IT-9176). Queremos aplicar el
+                mismo patrón a "economic".
               </p>
               <p style="margin-top: 12px">
                 <strong>🎯 INTENCIÓN:</strong><br />
-                <strong>Objetivo:</strong> Refactorizar validaciones de categoría "economic" al modelo ValidationStrategy + ValidationManager.
-                <br /><br />
+                <strong>Objetivo:</strong> Refactorizar validaciones de
+                categoría "economic" al modelo ValidationStrategy +
+                ValidationManager. <br /><br />
                 <strong>Tareas:</strong><br />
-                1. <strong>Estrategias:</strong> Crear clases en Housfy\Src\...\Strategy implementando ValidationStrategy<br />
-                2. <strong>Integrar:</strong> Modificar toResource() para usar ValidationManager<br />
-                3. <strong>Limpiar:</strong> Eliminar validaciones legacy de runOldValidations()<br />
-                4. <strong>Tests:</strong> PHPUnit por estrategia + Behat features (get_rental_*_validations_economic.feature)
+                1. <strong>Estrategias:</strong> Crear clases en
+                Housfy\Src\...\Strategy implementando ValidationStrategy<br />
+                2. <strong>Integrar:</strong> Modificar toResource() para usar
+                ValidationManager<br />
+                3. <strong>Limpiar:</strong> Eliminar validaciones legacy de
+                runOldValidations()<br />
+                4. <strong>Tests:</strong> PHPUnit por estrategia + Behat
+                features (get_rental_*_validations_economic.feature)
               </p>
               <p style="margin-top: 12px">
                 <strong>📐 FORMATO:</strong><br />
-                - PHP 8.1 con strict_types, PSR-12 | Tests: PHPUnit + Behat/Gherkin
+                - PHP 8.1 con strict_types, PSR-12 | Tests: PHPUnit +
+                Behat/Gherkin
               </p>
               <p style="margin-top: 12px">
                 <strong>✅ REVISIÓN:</strong><br />
-                - Validaciones migradas completamente | Tests pasando antes de borrar legacy<br />
+                - Validaciones migradas completamente | Tests pasando antes de
+                borrar legacy<br />
                 - Traducciones correctas | Sin duplicación de lógica
               </p>
             </div>
@@ -618,12 +631,24 @@
             <div class="example-content">
               <p>
                 <strong>🎓 BACKGROUND:</strong><br />
-                Tenemos GetRentalReservationContractValidationsConverter y GetRentalLeasingContractValidationsConverter con validaciones duplicadas. Ya implementamos ValidationStrategy + ValidationManager para la categoría "documentation" (IT-9176). Ahora necesitamos aplicar el mismo patrón a "economic".
+                Tenemos GetRentalReservationContractValidationsConverter y
+                GetRentalLeasingContractValidationsConverter con validaciones
+                duplicadas. Ya implementamos ValidationStrategy +
+                ValidationManager para la categoría "documentation" (IT-9176).
+                Ahora necesitamos aplicar el mismo patrón a "economic".
               </p>
               <p style="margin-top: 15px">
                 <strong>📝 EXAMPLE:</strong><br />
                 Código legacy actual:<br />
-                <code style="background: #f0f0f0; padding: 2px 8px; border-radius: 4px; display: block; margin-top: 5px;">
+                <code
+                  style="
+                    background: #f0f0f0;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    display: block;
+                    margin-top: 5px;
+                  "
+                >
                   // En runOldValidations()<br />
                   if ($contract->totalAmount < 0) {<br />
                   &nbsp;&nbsp;$errors[] = 'invalid_amount';<br />
@@ -631,18 +656,31 @@
                 </code>
                 <br />
                 Nuevo patrón Strategy:<br />
-                <code style="background: #e8f5e9; padding: 2px 8px; border-radius: 4px; display: block; margin-top: 5px;">
-                  class ValidatePositiveTotalAmount implements ValidationStrategy<br />
+                <code
+                  style="
+                    background: #e8f5e9;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    display: block;
+                    margin-top: 5px;
+                  "
+                >
+                  class ValidatePositiveTotalAmount implements
+                  ValidationStrategy<br />
                   $manager->addStrategy(new ValidatePositiveTotalAmount());
                 </code>
               </p>
               <p style="margin-top: 15px">
                 <strong>⚡ ACTION:</strong><br />
-                Migra todas las validaciones "economic" al patrón Strategy. Crea las clases en Housfy\Src\...\Strategy, intégralas en ValidationManager, actualiza tests PHPUnit y Behat, y elimina el código legacy.
+                Migra todas las validaciones "economic" al patrón Strategy. Crea
+                las clases en Housfy\Src\...\Strategy, intégralas en
+                ValidationManager, actualiza tests PHPUnit y Behat, y elimina el
+                código legacy.
               </p>
               <p style="margin-top: 15px">
                 <strong>🎯 RESULT:</strong><br />
-                Validaciones modulares, reutilizables y testeables. Tests pasando. Código legacy eliminado.
+                Validaciones modulares, reutilizables y testeables. Tests
+                pasando. Código legacy eliminado.
               </p>
             </div>
           </div>
@@ -660,7 +698,7 @@
               aprovecha
             </div>
           </div>
-          <div style="display: flex; flex-direction: row; gap: 300px;">
+          <div style="display: flex; flex-direction: row; gap: 300px">
             <div class="step">
               <p style="font-size: 1.3em; margin-top: 25px">
                 <strong>Vamos a cubrir:</strong>
@@ -675,11 +713,26 @@
                 <li>📂 MCPs (integraciones poderosas)</li>
               </ul>
             </div>
-            <div class="step" style="display: flex; align-items: center; justify-content: center;">
-              <img src="../assets/agent-selection.png" alt="Agent Selection" style="max-width: 80%; height: auto; margin: 20px auto; display: block;">
+            <div
+              class="step"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <img
+                src="./assets/agent-selection.png"
+                alt="Agent Selection"
+                style="
+                  max-width: 80%;
+                  height: auto;
+                  margin: 20px auto;
+                  display: block;
+                "
+              />
             </div>
           </div>
-          
         </div>
       </div>
 
@@ -689,7 +742,8 @@
         <div class="step">
           <span class="tool-icon">🤖</span>
           <p class="tool-description">
-            <strong>¿Qué es?</strong> Trabaja en paralelo con el usuario y tiene todo el contexto del repositorio.
+            <strong>¿Qué es?</strong> Trabaja en paralelo con el usuario y tiene
+            todo el contexto del repositorio.
           </p>
         </div>
         <div class="step">
@@ -717,9 +771,15 @@
         </div>
         <div class="step">
           <div class="highlight-box" style="margin-top: 20px">
-            <strong>💡 Caso de uso real:</strong> 
-            <li>Crear un servicio junto a su PHPUnit basado en un prompt y las Guidelines de Housfy</li>
-            <li>Crear múltiples migraciones, entidades, repositorios, V0, Collections, etc. para un nuevo proyecto</li>
+            <strong>💡 Caso de uso real:</strong>
+            <li>
+              Crear un servicio junto a su PHPUnit basado en un prompt y las
+              Guidelines de Housfy
+            </li>
+            <li>
+              Crear múltiples migraciones, entidades, repositorios, V0,
+              Collections, etc. para un nuevo proyecto
+            </li>
             <li>Hacer consultas a la Base de Datos</li>
           </div>
         </div>
@@ -758,8 +818,11 @@
         <div class="step">
           <div class="highlight-box" style="margin-top: 20px">
             <strong>💡 Caso de uso real:</strong>
-            <ul style="margin-top: 10px; margin-left: 20px;">
-              <li>Pasarle el enunciado de una task de Jira con buen contexto y dejarlo trabajar en background mientras haces otra cosa</li>
+            <ul style="margin-top: 10px; margin-left: 20px">
+              <li>
+                Pasarle el enunciado de una task de Jira con buen contexto y
+                dejarlo trabajar en background mientras haces otra cosa
+              </li>
             </ul>
           </div>
         </div>
@@ -776,7 +839,10 @@
             revisas y apruebas.
           </p>
         </div>
-        <div class="step" style="display: flex; flex-direction: row; gap: 300px;">
+        <div
+          class="step"
+          style="display: flex; flex-direction: row; gap: 300px"
+        >
           <div class="tool-features">
             <h3>✅ Ventajas del Plan Mode</h3>
             <ul>
@@ -798,11 +864,11 @@
             </ul>
           </div>
         </div>
-        
+
         <div class="step">
           <div class="highlight-box" style="margin-top: 20px">
-            <strong>💼 Caso de uso:</strong> Tareas grandes,
-            refactorizaciones críticas, etc.
+            <strong>💼 Caso de uso:</strong> Tareas grandes, refactorizaciones
+            críticas, etc.
           </div>
         </div>
       </div>
@@ -1222,7 +1288,9 @@ server.start();</pre>
 
       <!-- Slide 24: Recap -->
       <div class="slide slide-content" data-slide="24">
-        <h2 class="slide-title" style="margin-bottom: 20px; font-size: 2.5em">📋 Recap: Lo que hemos visto</h2>
+        <h2 class="slide-title" style="margin-bottom: 20px; font-size: 2.5em">
+          📋 Recap: Lo que hemos visto
+        </h2>
         <div class="content" style="font-size: 0.9em">
           <div class="step">
             <div class="highlight-box" style="padding: 15px">
@@ -1258,15 +1326,20 @@ server.start();</pre>
         <div class="content">
           <div class="step">
             <div class="highlight-box" style="padding: 25px">
-              <strong style="font-size: 1.3em">🔹 Reto 1: Fragmentar Guidelines de Back</strong>
+              <strong style="font-size: 1.3em"
+                >🔹 Reto 1: Fragmentar Guidelines de Back</strong
+              >
               <p style="margin-top: 10px; color: #555">
-                Dividir las guidelines de backend en módulos más específicos y manejables
+                Dividir las guidelines de backend en módulos más específicos y
+                manejables
               </p>
             </div>
           </div>
           <div class="step">
             <div class="highlight-box" style="padding: 25px; margin-top: 20px">
-              <strong style="font-size: 1.3em">🔹 Reto 2: Crear Guidelines de Front</strong>
+              <strong style="font-size: 1.3em"
+                >🔹 Reto 2: Crear Guidelines de Front</strong
+              >
               <p style="margin-top: 10px; color: #555">
                 Desarrollar guidelines específicas para el desarrollo frontend
               </p>
@@ -1274,9 +1347,12 @@ server.start();</pre>
           </div>
           <div class="step">
             <div class="highlight-box" style="padding: 25px; margin-top: 20px">
-              <strong style="font-size: 1.3em">🔹 Reto 3: IA al 100% + Browser de Cursor</strong>
+              <strong style="font-size: 1.3em"
+                >🔹 Reto 3: IA al 100% + Browser de Cursor</strong
+              >
               <p style="margin-top: 10px; color: #555">
-                Autoexigirse usar la IA al máximo para todas las tareas de hoy y aprovechar el nuevo browser de Cursor
+                Autoexigirse usar la IA al máximo para todas las tareas de hoy y
+                aprovechar el nuevo browser de Cursor
               </p>
             </div>
           </div>
