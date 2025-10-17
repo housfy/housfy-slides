@@ -1,0 +1,368 @@
+---
+alwaysApply: true
+---
+
+# 🎨 Guidelines para Sistema de Slides de Housfy
+
+## 📋 Arquitectura del sistema
+
+El proyecto está organizado de forma modular:
+
+- **`index.css`**: Estilos estructurales (contenedor, navegación, transiciones, steps, responsive)
+- **`slide-styles.css`**: Tipos de slides disponibles (portadas, listas, columnas, etc.)
+- **`script.js`**: Lógica completa (navegación, steps, inyección parcial de head y navigation)
+- **Archivos HTML**: Contienen referencias a CSS y JS, y `<section>` con las slides
+
+## ⚙️ Cómo funciona el sistema
+
+### Script automático (`script.js`)
+
+El `script.js` inyecta automáticamente:
+
+- Parte del contenido del `<head>` (fonts, meta tags)
+- La navegación y contador de slides
+- Calcula los `data-slide` de cada section
+
+**Nota**: Los CSS (`index.css`, `slide-styles.css`) deben estar en el `<head>` del HTML con rutas relativas correctas, NO se inyectan desde el script.
+
+### Estructura HTML requerida
+
+**Ejemplo base (para archivos en carpetas):**
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slides aquí -->
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>
+```
+
+**Para archivos en raíz (como template.html):**
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="slide-styles.css" />
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slides aquí -->
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
+```
+
+## 🎨 Tipos de slides disponibles
+
+**Nota:** Todas las slides (excepto `slide-cover`, `slide-quote` y `slide-final`) incluyen automáticamente el logo de Housfy pequeño en la esquina superior derecha mediante CSS.
+
+### 1. **slide-cover** - Portada
+
+- Fondo azul
+- Texto blanco centrado
+- Logo automático arriba derecha grande (pseudo-elemento `::before`)
+
+```html
+<section class="slide slide-cover active">
+  <div class="step visible">
+    <h1 class="slide-title">🏠 Título Principal</h1>
+  </div>
+  <p class="subtitle">Subtítulo opcional</p>
+</section>
+```
+
+### 2. **slide-content** - Contenido libre
+
+- Fondo blanco
+- Estilos mínimos para contenido flexible
+- Perfecto para personalizar con CSS custom por presentación
+- Incluye estilos para párrafos, listas (ul/ol) y highlight-box
+
+```html
+<section class="slide slide-content">
+  <h2 class="slide-title">🎯 Título</h2>
+  <div class="content">
+    <div class="step">
+      <p>Párrafo con contenido libre</p>
+      <ul>
+        <li>Item de lista</li>
+        <li>Otro item</li>
+      </ul>
+    </div>
+    <div class="step">
+      <div class="highlight-box">
+        <strong>💡 Destacado:</strong>
+        Contenido importante
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### 3. **slide-list** - Lista con números
+
+- Fondo blanco
+- Lista con números circulares azules
+
+```html
+<section class="slide slide-list">
+  <h2 class="slide-title">📊 Título de la slide</h2>
+  <div class="content">
+    <div class="step list-item">
+      <div class="number">01</div>
+      <div class="text">Texto del item</div>
+    </div>
+    <!-- Más items... -->
+  </div>
+</section>
+```
+
+### 4. **slide-two-columns** - Dos columnas
+
+- Fondo gris claro (#f8f9fa)
+- Dos columnas con cards blancas
+
+```html
+<section class="slide slide-two-columns">
+  <h2 class="slide-title">🎯 Título</h2>
+  <div class="columns">
+    <div class="step column">
+      <h3>📱 Subtítulo columna 1</h3>
+      <p>Texto de la columna</p>
+    </div>
+    <div class="step column">
+      <h3>🤝 Subtítulo columna 2</h3>
+      <p>Texto de la columna</p>
+    </div>
+  </div>
+</section>
+```
+
+### 5. **slide-image** - Slide con imagen
+
+- Fondo azul degradado
+- Espacio para imagen grande centrada
+
+```html
+<section class="slide slide-image">
+  <div class="slide-title">Título</div>
+  <div class="image-placeholder">
+    <img src="ruta/imagen.png" alt="Descripción" />
+  </div>
+</section>
+```
+
+### 6. **slide-final** - Slide final
+
+- Fondo azul sólido (#11aefa)
+- Logo centrado grande automático (pseudo-elemento `::after`)
+- **Sin logo en esquina** (solo el centrado)
+
+```html
+<section class="slide slide-final"></section>
+```
+
+### 7. **slide-code** - Código con explicación
+
+- Fondo gris claro (#f8f9fa)
+- Bloque de código con fondo oscuro
+- Zona de explicación con borde izquierdo azul
+- Soporte para syntax highlighting
+
+```html
+<section class="slide slide-code">
+  <h2 class="slide-title">💻 Título</h2>
+  <div class="step">
+    <pre>
+// Tu código aquí
+const ejemplo = "Hello World";
+console.log(ejemplo);</pre
+    >
+  </div>
+  <div class="step">
+    <div class="explanation">
+      <strong>💡 Explicación:</strong> Descripción del código
+    </div>
+  </div>
+</section>
+```
+
+### 8. **slide-quote** - Cita destacada o callout
+
+- Fondo degradado
+- Texto grande centrado
+- Icono grande arriba
+- Variantes de color: `quote-warning`, `quote-success`, `quote-danger`, `quote-info`
+- **Sin logo en esquina** (solo contenido centrado)
+
+```html
+<section class="slide slide-quote quote-warning">
+  <div class="step">
+    <span class="quote-icon">⚠️</span>
+  </div>
+  <div class="step">
+    <p class="quote-text">Tu mensaje importante aquí</p>
+  </div>
+  <div class="step">
+    <p class="quote-author">— Autor opcional</p>
+  </div>
+</section>
+```
+
+### 9. **slide-comparison** - Comparación lado a lado
+
+- Dos columnas con códigos de color
+- Izquierda con clase `bad` (rojo)
+- Derecha con clase `good` (verde)
+- Ideal para antes/después o bueno/malo
+
+```html
+<section class="slide slide-comparison">
+  <h2 class="slide-title">⚖️ Título</h2>
+  <div class="comparison-container">
+    <div class="step comparison-side bad">
+      <div class="comparison-header">
+        <span class="comparison-icon">❌</span>
+        <span>Evitar</span>
+      </div>
+      <div class="comparison-content">
+        <pre>// Código malo</pre>
+        <ul>
+          <li>Punto negativo 1</li>
+          <li>Punto negativo 2</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step comparison-side good">
+      <div class="comparison-header">
+        <span class="comparison-icon">✅</span>
+        <span>Preferir</span>
+      </div>
+      <div class="comparison-content">
+        <pre>// Código bueno</pre>
+        <ul>
+          <li>Punto positivo 1</li>
+          <li>Punto positivo 2</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+### 10. **slide-timeline** - Proceso paso a paso
+
+- Dos variantes: horizontal (`timeline-horizontal`) y vertical (`timeline-vertical`)
+- Pasos numerados con iconos
+- Líneas conectoras automáticas
+- Steps progresivos
+
+**Variante horizontal** (ideal para 3-5 pasos):
+
+```html
+<section class="slide slide-timeline">
+  <h2 class="slide-title">⏭️ Título</h2>
+  <div class="timeline-container">
+    <div class="timeline-horizontal">
+      <div class="step timeline-step">
+        <span class="timeline-step-icon">📋</span>
+        <div class="timeline-step-number">1</div>
+        <div class="timeline-step-title">Paso 1</div>
+        <div class="timeline-step-description">Descripción</div>
+      </div>
+      <!-- Más pasos... -->
+    </div>
+  </div>
+</section>
+```
+
+**Variante vertical** (ideal para 5+ pasos):
+
+```html
+<section class="slide slide-timeline">
+  <h2 class="slide-title">📅 Título</h2>
+  <div class="timeline-container">
+    <div class="timeline-vertical">
+      <div class="step timeline-step">
+        <div class="timeline-step-number">1</div>
+        <div class="timeline-step-content">
+          <div class="timeline-step-title">Paso 1</div>
+          <div class="timeline-step-description">Descripción</div>
+        </div>
+      </div>
+      <!-- Más pasos... -->
+    </div>
+  </div>
+</section>
+```
+
+## 📝 Guidelines CRÍTICAS
+
+### ✅ SIEMPRE hacer:
+
+1. **Usar la estructura base del HTML** (ver ejemplos arriba)
+
+   - Ajustar rutas relativas según ubicación (carpeta vs raíz)
+   - `<section class="slide slide-{tipo}">` para cada slide
+
+2. **Usar clases de tipos existentes**
+
+   - Solo los tipos documentados arriba
+   - NO inventar nuevas clases sin añadirlas a `slide-styles.css`
+
+3. **Respetar el sistema de steps**
+   - `.step` se revelan progresivamente
+   - Primer step de la primera slide debe tener `visible`
+
+### ❌ NUNCA hacer:
+
+- ❌ Crear archivos CSS nuevos para una presentación
+- ❌ Duplicar estilos que ya existen en `index.css` o `slide-styles.css`
+- ❌ Crear lógica JavaScript inline o en archivos nuevos
+- ❌ Poner estilos inline en las `<section>`
+- ❌ Añadir tags `<img>` para los logos (se manejan con CSS)
+- ❌ Incluir las referencias a CSS (`index.css`, `slide-styles.css`) en el script.js (deben estar en el HTML)
+
+### 🔧 Para estilos custom puntuales:
+
+Si hay necesidad de estilos MUY específicos que NO son reutilizables:
+
+- Añadir un `<style>` en el `<head>` del HTML
+- Marcar claramente como "Custom styles for this presentation"
+- Debe ser la excepción, no la regla
+
+### 🆕 Para crear nuevos tipos de slides:
+
+Si se necesita un nuevo tipo de slide reutilizable:
+
+1. Añadir el estilo en `slide-styles.css`
+2. Usar nomenclatura `.slide-{nombre-tipo}`
+3. Actualizar esta documentación con el nuevo tipo
+
+## 📂 Estructura de carpetas
+
+```
+housfy-slides/
+├── index.css                    # Estilos estructurales
+├── slide-styles.css             # Tipos de slides
+├── script.js                    # Lógica JS
+├── template.html                # Template base
+├── {carpeta-presentacion}/
+│   ├── index.html              # Índice de sesiones
+│   ├── session1.html           # Presentación
+│   └── session2.html           # Otra presentación
+└── index.html                   # Índice principal del proyecto
+```

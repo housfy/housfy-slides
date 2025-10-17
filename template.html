@@ -1,334 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Housfy Slides</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Manrope", sans-serif;
-        background: #1a1a1a;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
-        color: #333;
-      }
-
-      /* Container principal con aspect ratio 20x12 */
-      #slides-container {
-        height: 100vh;
-        aspect-ratio: 20 / 12;
-        position: relative;
-        background: white;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        overflow: hidden;
-      }
-
-      /* Slide base */
-      .slide {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        transform: translateX(100%);
-        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        padding: 60px;
-      }
-
-      .slide.active {
-        opacity: 1;
-        transform: translateX(0);
-        z-index: 2;
-      }
-
-      .slide.previous {
-        opacity: 0;
-        transform: translateX(-100%);
-        z-index: 1;
-      }
-
-      /* Título de slide */
-      .slide-title {
-        font-size: 3.5em;
-        font-weight: 800;
-        color: #11aefa;
-        margin-bottom: 40px;
-        line-height: 1.2;
-      }
-
-      /* Steps dentro de las slides */
-      .step {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.5s ease;
-      }
-
-      .step.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* Navegación */
-      .navigation {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        display: flex;
-        gap: 15px;
-        z-index: 1000;
-      }
-
-      .nav-button {
-        background: #11aefa;
-        border: none;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 20px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(17, 174, 250, 0.3);
-      }
-
-      .nav-button:hover {
-        background: #0d8bc7;
-        transform: scale(1.1);
-      }
-
-      .nav-button:active {
-        transform: scale(0.95);
-      }
-
-      /* Contador de slides */
-      .slide-counter {
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-        color: white;
-        font-size: 1.2em;
-        font-weight: 600;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 20px;
-        border-radius: 25px;
-        z-index: 1000;
-      }
-
-      /* ===== ESTILOS ESPECÍFICOS DE SLIDES ===== */
-
-      /* Slide de portada */
-      .slide-cover {
-        background: linear-gradient(135deg, #11aefa 0%, #0d8bc7 100%);
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-
-      .slide-cover .slide-title {
-        color: white;
-        font-size: 5em;
-        margin-bottom: 20px;
-      }
-
-      .slide-cover .subtitle {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 2em;
-        font-weight: 400;
-      }
-
-      .slide-cover .logo {
-        position: absolute;
-        top: 40px;
-        right: 60px;
-        width: 200px;
-        height: auto;
-      }
-
-      /* Slide de contenido con lista */
-      .slide-list {
-        background: white;
-      }
-
-      .slide-list .content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-      }
-
-      .slide-list .list-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 20px;
-        font-size: 1.8em;
-        line-height: 1.6;
-      }
-
-      .slide-list .list-item .number {
-        background: #11aefa;
-        color: white;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        flex-shrink: 0;
-      }
-
-      .slide-list .list-item .text {
-        flex: 1;
-        padding-top: 8px;
-      }
-
-      /* Slide de dos columnas */
-      .slide-two-columns {
-        background: #f8f9fa;
-      }
-
-      .slide-two-columns .columns {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
-        flex: 1;
-      }
-
-      .slide-two-columns .column {
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      }
-
-      .slide-two-columns .column h3 {
-        color: #11aefa;
-        font-size: 2em;
-        margin-bottom: 20px;
-      }
-
-      .slide-two-columns .column p {
-        font-size: 1.4em;
-        line-height: 1.6;
-        color: #666;
-      }
-
-      /* Slide con imagen grande */
-      .slide-image {
-        background: linear-gradient(to bottom, #11aefa 0%, #0891b2 100%);
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-
-      .slide-image .slide-title {
-        color: white;
-      }
-
-      .slide-image .image-placeholder {
-        width: 80%;
-        height: 60%;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3em;
-        color: white;
-        border: 3px dashed rgba(255, 255, 255, 0.5);
-      }
-
-      /* Slide final */
-      .slide-final {
-        background: #11aefa;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-
-      .slide-final .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
-
-      .slide-final .logo-image {
-        max-width: 500px;
-        width: 80%;
-        height: auto;
-      }
-
-      /* Animaciones */
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        #slides-container {
-          width: 100vw;
-          height: auto;
-          aspect-ratio: 20 / 12;
-        }
-
-        .slide {
-          padding: 40px;
-        }
-
-        .slide-title {
-          font-size: 2.5em;
-        }
-      }
-    </style>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="slide-styles.css" />
   </head>
   <body>
     <div id="slides-container">
       <!-- Slide 1: Portada -->
-      <div class="slide slide-cover active" data-slide="1">
-        <img
-          src="https://cms.housfy.com/assets/bd0ac14c-38b4-4d34-ad79-8815de13fd05.png"
-          alt="Housfy Logo"
-          class="logo"
-        />
+      <section class="slide slide-cover active">
         <div class="step visible">
           <h1 class="slide-title">🏠 Formación Leads y ZT</h1>
         </div>
-        <div class="step">
-          <p class="subtitle">Optimización de la captación</p>
-        </div>
-      </div>
+        <p class="subtitle">Optimización de la captación</p>
+      </section>
 
-      <!-- Slide 2: Lista con items -->
-      <div class="slide slide-list" data-slide="2">
+      <!-- Slide 2: Contenido libre -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">📄 Ejemplo slide-content</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              Esta es una slide de <strong>contenido libre</strong> con estilos
+              mínimos. Perfecta para añadir CSS custom en cada presentación.
+            </p>
+            <ul>
+              <li>Soporta listas sin estilo predefinido</li>
+              <li>Párrafos con espaciado generoso</li>
+              <li>Base neutra para personalizar</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Tip:</strong>
+              Añade un <code>&lt;style&gt;</code> en el head del HTML para
+              estilos custom específicos de la presentación sobre esta base.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Lista con items -->
+      <section class="slide slide-list">
         <h2 class="slide-title">📊 Objetivos de la formación</h2>
         <div class="content">
           <div class="step list-item">
@@ -344,10 +57,10 @@
             <div class="text">Mejorar la calidad de nuestras ZT</div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Slide 3: Dos columnas -->
-      <div class="slide slide-two-columns" data-slide="3">
+      <!-- Slide 4: Dos columnas -->
+      <section class="slide slide-two-columns">
         <h2 class="slide-title">🎯 Estrategia Dual</h2>
         <div class="columns">
           <div class="step column">
@@ -365,171 +78,172 @@
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Slide 4: Final -->
-      <div class="slide slide-final" data-slide="4">
-        <div class="step visible logo-container">
-          <img
-            src="https://cms.housfy.com/assets/bd0ac14c-38b4-4d34-ad79-8815de13fd05.png"
-            alt="Housfy Logo"
-            class="logo-image"
-          />
+      <!-- Slide 5: Código con explicación -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 Ejemplo slide-code</h2>
+        <div class="step">
+          <pre>
+// Ejemplo de código JavaScript
+const procesarDatos = (items) => {
+  return items
+    .filter(item => item.activo)
+    .map(item => ({
+      ...item,
+      precio: item.precio * 1.21
+    }));
+};</pre
+          >
         </div>
-      </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>💡 Explicación:</strong> Esta función filtra items activos y
+            añade IVA al precio. Usa fondo gris con código oscuro.
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Quote / Callout -->
+      <section class="slide slide-quote quote-warning">
+        <div class="step">
+          <span class="quote-icon">⚠️</span>
+        </div>
+        <div class="step">
+          <p class="quote-text">
+            Ejemplo de slide-quote<br />
+            Perfecto para destacar mensajes importantes
+          </p>
+        </div>
+        <div class="step">
+          <p class="quote-author">
+            — Variantes: default, warning, success, danger, info
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 7: Comparación -->
+      <section class="slide slide-comparison">
+        <h2 class="slide-title">⚖️ Ejemplo slide-comparison</h2>
+        <div class="comparison-container">
+          <div class="step comparison-side bad">
+            <div class="comparison-header">
+              <span class="comparison-icon">❌</span>
+              <span>Antes / Malo</span>
+            </div>
+            <div class="comparison-content">
+              <pre>
+// Código legacy
+if (valor < 0) {
+  errors.push('error');
+}</pre
+              >
+              <ul>
+                <li>Difícil de mantener</li>
+                <li>Código duplicado</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">✅</span>
+              <span>Después / Bueno</span>
+            </div>
+            <div class="comparison-content">
+              <pre>
+// Refactorizado
+class ValidatePositive {
+  validate() { ... }
+}</pre
+              >
+              <ul>
+                <li>Código limpio</li>
+                <li>Reutilizable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Timeline horizontal -->
+      <section class="slide slide-timeline">
+        <h2 class="slide-title">⏭️ Ejemplo slide-timeline (horizontal)</h2>
+        <div class="timeline-container">
+          <div class="timeline-horizontal">
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">📋</span>
+              <div class="timeline-step-number">1</div>
+              <div class="timeline-step-title">Paso 1</div>
+              <div class="timeline-step-description">
+                Primera fase del proceso
+              </div>
+            </div>
+
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">💻</span>
+              <div class="timeline-step-number">2</div>
+              <div class="timeline-step-title">Paso 2</div>
+              <div class="timeline-step-description">
+                Segunda fase del proceso
+              </div>
+            </div>
+
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">🚀</span>
+              <div class="timeline-step-number">3</div>
+              <div class="timeline-step-title">Paso 3</div>
+              <div class="timeline-step-description">
+                Tercera fase del proceso
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Timeline vertical -->
+      <section class="slide slide-timeline">
+        <h2 class="slide-title">📅 Ejemplo slide-timeline (vertical)</h2>
+        <div class="timeline-container">
+          <div class="timeline-vertical">
+            <div class="step timeline-step">
+              <div class="timeline-step-number">1</div>
+              <div class="timeline-step-content">
+                <div class="timeline-step-title">Primera etapa</div>
+                <div class="timeline-step-description">
+                  Descripción de la primera etapa del roadmap
+                </div>
+              </div>
+            </div>
+
+            <div class="step timeline-step">
+              <div class="timeline-step-number">2</div>
+              <div class="timeline-step-content">
+                <div class="timeline-step-title">Segunda etapa</div>
+                <div class="timeline-step-description">
+                  Descripción de la segunda etapa del roadmap
+                </div>
+              </div>
+            </div>
+
+            <div class="step timeline-step">
+              <div class="timeline-step-number">3</div>
+              <div class="timeline-step-content">
+                <div class="timeline-step-title">Tercera etapa</div>
+                <div class="timeline-step-description">
+                  Descripción de la tercera etapa del roadmap
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Final -->
+      <section class="slide slide-final"></section>
     </div>
 
-    <!-- Navegación -->
-    <div class="navigation">
-      <button class="nav-button" id="prev-btn" title="Anterior">←</button>
-      <button class="nav-button" id="next-btn" title="Siguiente">→</button>
-    </div>
-
-    <!-- Contador -->
-    <div class="slide-counter">
-      <span id="current-slide">1</span> / <span id="total-slides">4</span>
-    </div>
-
-    <script>
-      class SlideShow {
-        constructor() {
-          this.slides = document.querySelectorAll(".slide");
-          this.currentSlideIndex = 0;
-          this.currentStepIndex = 0;
-          this.totalSlides = this.slides.length;
-
-          this.init();
-        }
-
-        init() {
-          // Actualizar contador
-          document.getElementById("total-slides").textContent =
-            this.totalSlides;
-
-          // Event listeners para navegación
-          document
-            .getElementById("next-btn")
-            .addEventListener("click", () => this.next());
-          document
-            .getElementById("prev-btn")
-            .addEventListener("click", () => this.previous());
-
-          // Event listeners para teclado
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowRight" || e.key === " ") {
-              e.preventDefault();
-              this.next();
-            } else if (e.key === "ArrowLeft") {
-              e.preventDefault();
-              this.previous();
-            }
-          });
-
-          // Event listener para clicks en la pantalla
-          document
-            .getElementById("slides-container")
-            .addEventListener("click", (e) => {
-              // No navegar si se hizo click en los botones
-              if (!e.target.closest(".nav-button")) {
-                this.next();
-              }
-            });
-
-          // Mostrar primera slide y sus steps iniciales
-          this.showSlide(0);
-        }
-
-        getCurrentSlide() {
-          return this.slides[this.currentSlideIndex];
-        }
-
-        getSteps(slide) {
-          return slide.querySelectorAll(".step");
-        }
-
-        next() {
-          const currentSlide = this.getCurrentSlide();
-          const steps = this.getSteps(currentSlide);
-
-          // Si hay más steps en la slide actual
-          if (this.currentStepIndex < steps.length - 1) {
-            this.currentStepIndex++;
-            steps[this.currentStepIndex].classList.add("visible");
-          }
-          // Si no hay más steps, ir a la siguiente slide
-          else if (this.currentSlideIndex < this.totalSlides - 1) {
-            this.goToSlide(this.currentSlideIndex + 1);
-          }
-        }
-
-        previous() {
-          const currentSlide = this.getCurrentSlide();
-          const steps = this.getSteps(currentSlide);
-
-          // Si hay steps visibles para ocultar
-          if (this.currentStepIndex > 0) {
-            steps[this.currentStepIndex].classList.remove("visible");
-            this.currentStepIndex--;
-          }
-          // Si no, ir a la slide anterior
-          else if (this.currentSlideIndex > 0) {
-            this.goToSlide(this.currentSlideIndex - 1, true);
-          }
-        }
-
-        goToSlide(index, showAllSteps = false) {
-          if (index < 0 || index >= this.totalSlides) return;
-
-          // Ocultar slide actual
-          const currentSlide = this.getCurrentSlide();
-          currentSlide.classList.remove("active");
-          currentSlide.classList.add("previous");
-
-          // Ocultar todos los steps de la slide actual
-          const currentSteps = this.getSteps(currentSlide);
-          currentSteps.forEach((step) => step.classList.remove("visible"));
-
-          // Actualizar índice
-          this.currentSlideIndex = index;
-
-          // Mostrar nueva slide
-          const newSlide = this.getCurrentSlide();
-          newSlide.classList.remove("previous");
-          newSlide.classList.add("active");
-
-          // Resetear steps
-          const newSteps = this.getSteps(newSlide);
-
-          if (showAllSteps) {
-            // Al retroceder, mostrar todos los steps
-            this.currentStepIndex = newSteps.length - 1;
-            newSteps.forEach((step) => step.classList.add("visible"));
-          } else {
-            // Al avanzar, mostrar solo el primer step
-            this.currentStepIndex = 0;
-            if (newSteps.length > 0) {
-              newSteps[0].classList.add("visible");
-            }
-          }
-
-          // Actualizar contador
-          this.updateCounter();
-        }
-
-        showSlide(index) {
-          this.goToSlide(index);
-        }
-
-        updateCounter() {
-          document.getElementById("current-slide").textContent =
-            this.currentSlideIndex + 1;
-        }
-      }
-
-      // Inicializar slideshow cuando el DOM esté listo
-      document.addEventListener("DOMContentLoaded", () => {
-        new SlideShow();
-      });
-    </script>
+    <!-- La navegación y contador se inyectan automáticamente desde script.js -->
+    <script src="script.js"></script>
   </body>
 </html>
