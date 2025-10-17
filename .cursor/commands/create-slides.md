@@ -30,7 +30,7 @@ Título descriptivo de la presentación
 - **slide-list**: Para listas con números circulares
 - **slide-two-columns**: Para contenido lado a lado
 - **slide-image**: Para slides con imágenes destacadas
-- **slide-final**: Slide final con logo
+- **slide-final**: Slide final con logo (añadela siempre al final)
 
 #### Avanzadas (nuevas)
 

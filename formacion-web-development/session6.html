@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+    <style>
+      /* Custom styles para esta sesión - colores cyan/teal */
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">🎨 SESIÓN 6</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">CSS moderno y responsive design</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: ¿Qué es CSS? -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🎨 ¿Qué es CSS?</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>CSS</strong> = Cascading Style Sheets</p>
+            <p>
+              Es el "diseñador de interiores" de tu web. Define cómo se
+              <strong>ve</strong> el contenido HTML 🎭
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>CSS hace:</strong></p>
+            <ul>
+              <li>Colores, tipografías, tamaños</li>
+              <li>Layouts (distribución de elementos)</li>
+              <li>Animaciones y transiciones</li>
+              <li>Responsive design (adaptación a dispositivos)</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Analogía:</strong>
+              Si HTML es la estructura de una casa, CSS es la decoración,
+              pintura y diseño interior
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Sintaxis básica CSS -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📝 Sintaxis básica CSS</h2>
+        <div class="step">
+          <pre>
+/* Estructura de una regla CSS */
+selector {
+  propiedad: valor;
+  otra-propiedad: otro-valor;
+}
+
+/* Ejemplo real */
+h1 {
+  color: #06b6d4;
+  font-size: 32px;
+  text-align: center;
+}
+
+.boton {
+  background-color: #06b6d4;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Partes:</strong> Selector (qué) + Declaración (cómo)
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Selectores CSS -->
+      <section class="slide slide-table">
+        <h2 class="slide-title">🎯 Selectores CSS principales</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Selector</th>
+                <th>Sintaxis</th>
+                <th>Selecciona</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Elemento</strong></td>
+                <td>p { }</td>
+                <td>Todos los &lt;p&gt;</td>
+              </tr>
+              <tr>
+                <td><strong>Clase</strong></td>
+                <td>.boton { }</td>
+                <td>class="boton"</td>
+              </tr>
+              <tr>
+                <td><strong>ID</strong></td>
+                <td>#header { }</td>
+                <td>id="header"</td>
+              </tr>
+              <tr>
+                <td><strong>Descendiente</strong></td>
+                <td>div p { }</td>
+                <td>&lt;p&gt; dentro de &lt;div&gt;</td>
+              </tr>
+              <tr>
+                <td><strong>Hijo directo</strong></td>
+                <td>div > p { }</td>
+                <td>&lt;p&gt; hijo directo de &lt;div&gt;</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 5: Box Model -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📦 Box Model - El modelo de caja</h2>
+        <div class="step">
+          <pre>
+/* Cada elemento HTML es una caja con 4 partes */
+.elemento {
+  /* Contenido (width x height) */
+  width: 300px;
+  height: 200px;
+  
+  /* Padding (espacio interno) */
+  padding: 20px;
+  
+  /* Border (borde) */
+  border: 2px solid #06b6d4;
+  
+  /* Margin (espacio externo) */
+  margin: 10px;
+}
+
+/* box-sizing: border-box hace el cálculo más intuitivo */
+* {
+  box-sizing: border-box;
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>📐 Cálculo:</strong> Ancho total = width + padding + border
+            (con border-box)
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Display -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔲 Display - Tipos de elementos</h2>
+        <div class="step">
+          <pre>
+/* Block: Ocupa todo el ancho disponible */
+div {
+  display: block;
+}
+
+/* Inline: Solo el ancho de su contenido */
+span {
+  display: inline;
+}
+
+/* Inline-block: Híbrido (mejor de ambos) */
+.boton {
+  display: inline-block;
+}
+
+/* None: Oculta el elemento */
+.oculto {
+  display: none;
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 7: Flexbox - Introducción -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🔄 Flexbox - Layout moderno</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>Flexbox</strong> facilita la distribución de elementos en
+              una dimensión (fila o columna) 📏
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>Conceptos clave:</strong></p>
+            <ul>
+              <li><strong>Container:</strong> Padre con display: flex</li>
+              <li><strong>Items:</strong> Hijos directos del container</li>
+              <li><strong>Main axis:</strong> Eje principal (horizontal)</li>
+              <li><strong>Cross axis:</strong> Eje secundario (vertical)</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Perfecto para:</strong>
+              Navegaciones, cards horizontales, centrar elementos
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Flexbox - Propiedades container -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 Flexbox - Propiedades del container</h2>
+        <div class="step">
+          <pre>
+.container {
+  display: flex;
+  
+  /* Dirección */
+  flex-direction: row; /* row | column | row-reverse | column-reverse */
+  
+  /* Alineación horizontal (main axis) */
+  justify-content: center; /* flex-start | flex-end | center | space-between | space-around */
+  
+  /* Alineación vertical (cross axis) */
+  align-items: center; /* flex-start | flex-end | center | stretch */
+  
+  /* Salto de línea */
+  flex-wrap: wrap; /* nowrap | wrap | wrap-reverse */
+  
+  /* Gap entre items */
+  gap: 20px;
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 9: Flexbox - Ejemplo práctico -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 Flexbox - Ejemplo: Navbar</h2>
+        <div class="step">
+          <pre>
+/* HTML */
+&lt;nav class="navbar"&gt;
+  &lt;div class="logo"&gt;Logo&lt;/div&gt;
+  &lt;ul class="menu"&gt;
+    &lt;li&gt;Inicio&lt;/li&gt;
+    &lt;li&gt;Productos&lt;/li&gt;
+    &lt;li&gt;Contacto&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;
+
+/* CSS */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #06b6d4;
+}
+
+.menu {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 10: Grid - Introducción -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">📐 CSS Grid - Layout bidimensional</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>Grid</strong> permite crear layouts complejos en 2
+              dimensiones (filas Y columnas) 🎯
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>Conceptos clave:</strong></p>
+            <ul>
+              <li><strong>Container:</strong> Padre con display: grid</li>
+              <li><strong>Items:</strong> Hijos directos del container</li>
+              <li><strong>Tracks:</strong> Filas y columnas</li>
+              <li><strong>Cells:</strong> Intersecciones</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Perfecto para:</strong>
+              Layouts de página completa, galerías, dashboards
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Grid - Propiedades básicas -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 CSS Grid - Propiedades básicas</h2>
+        <div class="step">
+          <pre>
+.container {
+  display: grid;
+  
+  /* Definir columnas */
+  grid-template-columns: 200px 200px 200px;
+  /* O con fr (fracciones) */
+  grid-template-columns: 1fr 1fr 1fr;
+  /* O con repeat */
+  grid-template-columns: repeat(3, 1fr);
+  
+  /* Definir filas */
+  grid-template-rows: 100px 200px;
+  
+  /* Gap entre items */
+  gap: 20px;
+  /* O separado */
+  row-gap: 20px;
+  column-gap: 30px;
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 12: Grid - Ejemplo práctico -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 Grid - Ejemplo: Layout de página</h2>
+        <div class="step">
+          <pre>
+.page-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 80px 1fr 60px;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+  gap: 20px;
+  height: 100vh;
+}
+
+.header  { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main    { grid-area: main; }
+.footer  { grid-area: footer; }</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>✨ Grid areas:</strong> Nombres visuales para posicionar
+            elementos
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13: Flexbox vs Grid -->
+      <section class="slide slide-comparison">
+        <h2 class="slide-title">⚖️ Flexbox vs Grid</h2>
+        <div class="comparison-container">
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">🔄</span>
+              <span>Flexbox</span>
+            </div>
+            <div class="comparison-content">
+              <ul>
+                <li><strong>✅</strong> Una dimensión (fila o columna)</li>
+                <li><strong>✅</strong> Distribución de espacio</li>
+                <li><strong>✅</strong> Alineación de items</li>
+                <li><strong>✅</strong> Componentes pequeños</li>
+              </ul>
+              <p style="margin-top: 15px">
+                <strong>Usa para:</strong> Navegaciones, toolbars, cards en fila
+              </p>
+            </div>
+          </div>
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">📐</span>
+              <span>Grid</span>
+            </div>
+            <div class="comparison-content">
+              <ul>
+                <li><strong>✅</strong> Dos dimensiones (filas y columnas)</li>
+                <li><strong>✅</strong> Layouts complejos</li>
+                <li><strong>✅</strong> Posicionamiento preciso</li>
+                <li><strong>✅</strong> Páginas completas</li>
+              </ul>
+              <p style="margin-top: 15px">
+                <strong>Usa para:</strong> Layouts de página, galerías,
+                dashboards
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: Responsive Design - Conceptos -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">📱 Responsive Design</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>Responsive Design</strong> = Tu web se adapta a cualquier
+              tamaño de pantalla 📱💻🖥️
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>Técnicas principales:</strong></p>
+            <ul>
+              <li><strong>Meta viewport:</strong> Esencial en el HTML</li>
+              <li><strong>Media queries:</strong> CSS condicional</li>
+              <li><strong>Unidades relativas:</strong> %, rem, vw, vh</li>
+              <li><strong>Mobile-first:</strong> Diseñar primero para móvil</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Breakpoints comunes:</strong>
+              Mobile (320px+), Tablet (768px+), Desktop (1024px+)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 15: Media Queries -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📱 Media Queries</h2>
+        <div class="step">
+          <pre>
+/* Mobile First: estilos base para móvil */
+.container {
+  width: 100%;
+  padding: 10px;
+}
+
+/* Tablet (768px en adelante) */
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop (1024px en adelante) */
+@media (min-width: 1024px) {
+  .container {
+    width: 1000px;
+  }
+}
+
+/* Desktop grande (1280px en adelante) */
+@media (min-width: 1280px) {
+  .container {
+    width: 1200px;
+  }
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 16: Ejemplo responsive completo -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 Ejemplo: Grid responsive</h2>
+        <div class="step">
+          <pre>
+/* Mobile: 1 columna */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* Tablet: 2 columnas */
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 columnas */
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop XL: 4 columnas */
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 17: Variables CSS -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎨 Variables CSS (Custom Properties)</h2>
+        <div class="step">
+          <pre>
+/* Definir variables en :root */
+:root {
+  --color-primary: #06b6d4;
+  --color-secondary: #0891b2;
+  --color-text: #333;
+  --spacing-small: 10px;
+  --spacing-medium: 20px;
+  --spacing-large: 40px;
+  --border-radius: 8px;
+}
+
+/* Usar variables */
+.boton {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-medium);
+  border-radius: var(--border-radius);
+}
+
+.card {
+  border: 2px solid var(--color-primary);
+  margin: var(--spacing-large);
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 18: Unidades CSS -->
+      <section class="slide slide-table">
+        <h2 class="slide-title">📏 Unidades CSS modernas</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Unidad</th>
+                <th>Tipo</th>
+                <th>Uso recomendado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>px</strong></td>
+                <td>Absoluta</td>
+                <td>Bordes, sombras</td>
+              </tr>
+              <tr>
+                <td><strong>%</strong></td>
+                <td>Relativa</td>
+                <td>Anchos, alturas</td>
+              </tr>
+              <tr>
+                <td><strong>rem</strong></td>
+                <td>Relativa</td>
+                <td>Font-size, spacing</td>
+              </tr>
+              <tr>
+                <td><strong>em</strong></td>
+                <td>Relativa</td>
+                <td>Padding proporcional</td>
+              </tr>
+              <tr>
+                <td><strong>vw / vh</strong></td>
+                <td>Viewport</td>
+                <td>Secciones fullscreen</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 19: Buenas prácticas CSS -->
+      <section class="slide slide-list">
+        <h2 class="slide-title">✅ Buenas prácticas CSS</h2>
+        <div class="content">
+          <div class="step list-item">
+            <div class="number">01</div>
+            <div class="text">
+              <strong>Mobile-first siempre</strong><br />
+              Diseña primero para móvil, luego escala a desktop
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">02</div>
+            <div class="text">
+              <strong>Usa variables CSS</strong><br />
+              Mantén colores y valores consistentes en todo el proyecto
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">03</div>
+            <div class="text">
+              <strong>Organiza tu CSS</strong><br />
+              Agrupa por componentes o secciones, usa comentarios
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">04</div>
+            <div class="text">
+              <strong>Evita !important</strong><br />
+              Indica problemas de especificidad, refactoriza en su lugar
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">05</div>
+            <div class="text">
+              <strong>Nombres de clases descriptivos</strong><br />
+              .btn-primary es mejor que .azul
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 20: Resumen -->
+      <section class="slide slide-summary">
+        <h2 class="slide-title">📝 Resumen Sesión 6</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Sintaxis CSS y selectores principales</li>
+              <li>Box Model y tipos de display</li>
+              <li>Flexbox para layouts unidimensionales</li>
+              <li>CSS Grid para layouts bidimensionales</li>
+              <li>Responsive Design con media queries</li>
+              <li>Variables CSS y unidades modernas</li>
+              <li>Buenas prácticas de CSS profesional</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>🎉 ¡Formación completada!</strong><br />
+              Ya tienes las bases para crear aplicaciones web modernas
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide slide-final"></section>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

@@ -41,6 +41,7 @@ body {
   display: flex;
   flex-direction: column;
   padding: 40px 60px;
+  overflow-y: auto;
 }
 
 .slide.active {

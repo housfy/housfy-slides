@@ -527,6 +527,73 @@
   flex: 1;
 }
 
+/* ===== SLIDE TABLE ===== */
+.slide-table {
+  background: white;
+}
+
+.slide-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 1.3em;
+}
+
+.slide-table th {
+  background: #11aefa;
+  color: white;
+  padding: 20px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.slide-table td {
+  padding: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.slide-table tr:hover {
+  background: #f8f9fa;
+}
+
+/* ===== SLIDE SUMMARY ===== */
+.slide-summary {
+  background: #11aefa;
+}
+
+.slide-summary .slide-title {
+  color: white;
+}
+
+.slide-summary .summary-box {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  font-size: 1.4em;
+}
+
+.slide-summary .summary-box h3 {
+  color: #11aefa;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+}
+
+.slide-summary .summary-box ul {
+  list-style: none;
+}
+
+.slide-summary .summary-box li {
+  margin-bottom: 15px;
+  padding-left: 30px;
+  position: relative;
+}
+
+.slide-summary .summary-box li:before {
+  content: "✅";
+  position: absolute;
+  left: 0;
+}
+
 /* Responsive */
 @media (max-width: 1200px) {
   .slide-comparison .comparison-container {

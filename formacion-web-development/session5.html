@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+    <style>
+      /* Custom styles para esta sesión - colores naranjas */
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">🌐 SESIÓN 5</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">APIs y comunicación asíncrona</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: ¿Qué es una API? -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🔌 ¿Qué es una API?</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>API</strong> = Application Programming Interface</p>
+            <p>
+              Es un "camarero" que lleva tu pedido (request) a la cocina
+              (servidor) y te trae la comida (response) 🍽️
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>APIs REST:</strong> El estándar más común</p>
+            <ul>
+              <li>Usan HTTP (GET, POST, PUT, DELETE)</li>
+              <li>Devuelven datos en formato JSON</li>
+              <li>Stateless (cada petición es independiente)</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Ejemplo real:</strong>
+              Cuando consultas el tiempo en una app, hace una petición a una API
+              meteorológica
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: HTTP Methods -->
+      <section class="slide slide-table">
+        <h2 class="slide-title">📡 Métodos HTTP principales</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Método</th>
+                <th>Acción</th>
+                <th>Ejemplo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>GET</strong></td>
+                <td>Obtener datos</td>
+                <td>Listar usuarios</td>
+              </tr>
+              <tr>
+                <td><strong>POST</strong></td>
+                <td>Crear nuevo</td>
+                <td>Crear usuario</td>
+              </tr>
+              <tr>
+                <td><strong>PUT</strong></td>
+                <td>Actualizar completo</td>
+                <td>Actualizar perfil</td>
+              </tr>
+              <tr>
+                <td><strong>PATCH</strong></td>
+                <td>Actualizar parcial</td>
+                <td>Cambiar email</td>
+              </tr>
+              <tr>
+                <td><strong>DELETE</strong></td>
+                <td>Eliminar</td>
+                <td>Borrar usuario</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 4: Código síncrono vs asíncrono -->
+      <section class="slide slide-comparison">
+        <h2 class="slide-title">⏱️ Síncrono vs Asíncrono</h2>
+        <div class="comparison-container">
+          <div class="step comparison-side bad">
+            <div class="comparison-header">
+              <span class="comparison-icon">🐌</span>
+              <span>Código Síncrono</span>
+            </div>
+            <div class="comparison-content">
+              <pre>
+console.log("1. Inicio");
+
+// Bloquea todo durante 3 segundos
+esperarTresSegundos(); 
+
+console.log("2. Fin");
+// "Fin" se ejecuta después de 3 seg</pre
+              >
+              <ul>
+                <li>Ejecuta línea por línea</li>
+                <li>Bloquea la ejecución</li>
+                <li>Mala experiencia de usuario</li>
+              </ul>
+            </div>
+          </div>
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">⚡</span>
+              <span>Código Asíncrono</span>
+            </div>
+            <div class="comparison-content">
+              <pre>
+console.log("1. Inicio");
+
+// No bloquea, continúa
+setTimeout(() => {
+  console.log("3. Después de 3 seg");
+}, 3000);
+
+console.log("2. Fin inmediato");</pre
+              >
+              <ul>
+                <li>No espera a terminar</li>
+                <li>No bloquea nada</li>
+                <li>Mejor experiencia</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Promesas -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🤝 Promesas en JavaScript</h2>
+        <div class="step">
+          <pre>
+// Una promesa representa un valor futuro
+const miPromesa = new Promise((resolve, reject) => {
+  const exito = true;
+  
+  if (exito) {
+    resolve("¡Todo bien!"); // Promesa cumplida
+  } else {
+    reject("Algo falló"); // Promesa rechazada
+  }
+});
+
+// Usar la promesa
+miPromesa
+  .then(resultado => {
+    console.log(resultado); // "¡Todo bien!"
+  })
+  .catch(error => {
+    console.error(error);
+  });</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Estados:</strong> pending (esperando) → fulfilled (éxito) o
+            rejected (error)
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: async/await -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">✨ async/await - Sintaxis moderna</h2>
+        <div class="step">
+          <pre>
+// Función asíncrona
+async function obtenerDatos() {
+  try {
+    // await espera a que la promesa se resuelva
+    const resultado = await miPromesa;
+    console.log(resultado);
+    
+    const otroDato = await otraPromesa;
+    return otroDato;
+    
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+// Llamar función asíncrona
+obtenerDatos();</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>✅ Ventajas:</strong> Código más limpio, parece síncrono
+            pero no bloquea
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: fetch() - La forma moderna -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎣 fetch() - Consumir APIs</h2>
+        <div class="step">
+          <pre>
+// GET request
+async function obtenerUsuarios() {
+  try {
+    const response = await fetch('https://api.ejemplo.com/usuarios');
+    
+    if (!response.ok) {
+      throw new Error('Error en la petición');
+    }
+    
+    const datos = await response.json();
+    console.log(datos);
+    return datos;
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 8: fetch() POST -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📤 fetch() - Enviar datos (POST)</h2>
+        <div class="step">
+          <pre>
+async function crearUsuario(usuario) {
+  try {
+    const response = await fetch('https://api.ejemplo.com/usuarios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(usuario)
+    });
+    
+    const nuevoUsuario = await response.json();
+    console.log('Usuario creado:', nuevoUsuario);
+    return nuevoUsuario;
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+// Usar
+crearUsuario({ nombre: "Ana", email: "ana@test.com" });</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 9: Flujo tradicional HTTP -->
+      <section class="slide slide-timeline">
+        <h2 class="slide-title">🔄 Flujo tradicional: Request-Response</h2>
+        <div class="timeline-container">
+          <div class="timeline-horizontal">
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">🌐</span>
+              <div class="timeline-step-number">1</div>
+              <div class="timeline-step-title">Cliente hace petición</div>
+              <div class="timeline-step-description">
+                fetch() envía request al servidor
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">⚙️</span>
+              <div class="timeline-step-number">2</div>
+              <div class="timeline-step-title">Servidor procesa</div>
+              <div class="timeline-step-description">
+                Backend ejecuta lógica y consulta BD
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">📦</span>
+              <div class="timeline-step-number">3</div>
+              <div class="timeline-step-title">Servidor responde</div>
+              <div class="timeline-step-description">
+                Devuelve datos en JSON
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">✅</span>
+              <div class="timeline-step-number">4</div>
+              <div class="timeline-step-title">Cliente recibe</div>
+              <div class="timeline-step-description">
+                Procesa respuesta y actualiza UI
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Ejemplo flujo tradicional -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 Ejemplo: Flujo tradicional completo</h2>
+        <div class="step">
+          <pre>
+// Cliente (Frontend)
+async function obtenerProductos() {
+  // 1. Cliente hace petición GET
+  const response = await fetch('https://api.tienda.com/productos');
+  
+  // 4. Cliente recibe respuesta
+  const productos = await response.json();
+  
+  // Actualizar interfaz
+  mostrarProductos(productos);
+}
+
+// Servidor (Backend - Concepto)
+// 2. Servidor procesa
+// app.get('/productos', async (req, res) => {
+//   const productos = await database.query('SELECT * FROM productos');
+//   
+//   3. Servidor responde
+//   res.json(productos);
+// });</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>✅ Perfecto para:</strong> Consultas puntuales, operaciones
+            CRUD
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Limitación del flujo tradicional -->
+      <section class="slide slide-quote quote-warning">
+        <div class="step">
+          <span class="quote-icon">⚠️</span>
+        </div>
+        <div class="step">
+          <p class="quote-text">
+            El flujo Request-Response tradicional NO es eficiente para datos en
+            tiempo real
+          </p>
+        </div>
+        <div class="step">
+          <p class="quote-author">
+            — El cliente debe hacer polling (consultar constantemente)
+          </p>
+        </div>
+      </section>
+
+      <!-- Slide 12: EventSource y SSE -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">📡 EventSource y Server-Sent Events (SSE)</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>SSE</strong> permite que el servidor envíe datos al
+              cliente automáticamente 🎯
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>Características:</strong></p>
+            <ul>
+              <li>Conexión persistente unidireccional (servidor → cliente)</li>
+              <li>Eventos en tiempo real sin polling</li>
+              <li>Reconexión automática</li>
+              <li>Protocolo simple sobre HTTP</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Casos de uso:</strong>
+              Notificaciones, feeds en tiempo real, progreso de tareas,
+              actualizaciones de estado
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13: Flujo con EventSource -->
+      <section class="slide slide-timeline">
+        <h2 class="slide-title">🔄 Flujo con EventSource (SSE)</h2>
+        <div class="timeline-container">
+          <div class="timeline-horizontal">
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">🔌</span>
+              <div class="timeline-step-number">1</div>
+              <div class="timeline-step-title">Cliente conecta</div>
+              <div class="timeline-step-description">
+                EventSource abre conexión persistente
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">👂</span>
+              <div class="timeline-step-number">2</div>
+              <div class="timeline-step-title">Cliente escucha</div>
+              <div class="timeline-step-description">
+                Espera eventos del servidor
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">📤</span>
+              <div class="timeline-step-number">3</div>
+              <div class="timeline-step-title">Servidor envía</div>
+              <div class="timeline-step-description">
+                Push automático cuando hay datos
+              </div>
+            </div>
+            <div class="step timeline-step">
+              <span class="timeline-step-icon">🔁</span>
+              <div class="timeline-step-number">4</div>
+              <div class="timeline-step-title">Ciclo continuo</div>
+              <div class="timeline-step-description">
+                Se repite mientras esté conectado
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: EventSource código cliente -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💻 EventSource - Código Cliente</h2>
+        <div class="step">
+          <pre>
+// Crear conexión EventSource
+const eventSource = new EventSource('https://api.ejemplo.com/eventos');
+
+// Escuchar evento por defecto "message"
+eventSource.onmessage = (event) => {
+  const datos = JSON.parse(event.data);
+  console.log('Datos recibidos:', datos);
+  actualizarUI(datos);
+};
+
+// Escuchar evento personalizado
+eventSource.addEventListener('notificacion', (event) => {
+  const notif = JSON.parse(event.data);
+  mostrarNotificacion(notif);
+});
+
+// Manejar errores
+eventSource.onerror = (error) => {
+  console.error('Error en conexión:', error);
+};
+
+// Cerrar conexión cuando no se necesite
+// eventSource.close();</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 15: EventSource código servidor -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">⚙️ SSE - Código Servidor (Node.js)</h2>
+        <div class="step">
+          <pre>
+// Endpoint SSE en Express
+app.get('/eventos', (req, res) => {
+  // Configurar headers para SSE
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  
+  // Enviar evento cada 5 segundos
+  const intervalo = setInterval(() => {
+    const datos = {
+      timestamp: new Date().toISOString(),
+      valor: Math.random()
+    };
+    
+    // Formato SSE: data: {contenido}\n\n
+    res.write(`data: ${JSON.stringify(datos)}\n\n`);
+  }, 5000);
+  
+  // Limpiar cuando cliente desconecta
+  req.on('close', () => {
+    clearInterval(intervalo);
+  });
+});</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 16: Request-Response vs EventSource -->
+      <section class="slide slide-comparison">
+        <h2 class="slide-title">⚖️ Request-Response vs EventSource</h2>
+        <div class="comparison-container">
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">📞</span>
+              <span>Request-Response</span>
+            </div>
+            <div class="comparison-content">
+              <ul>
+                <li><strong>✅</strong> Simple de implementar</li>
+                <li><strong>✅</strong> Bien para operaciones puntuales</li>
+                <li><strong>✅</strong> Cliente controla cuándo pedir</li>
+                <li><strong>❌</strong> Ineficiente para tiempo real</li>
+                <li><strong>❌</strong> Requiere polling</li>
+              </ul>
+              <p style="margin-top: 15px">
+                <strong>Usa para:</strong> CRUD, consultas, formularios
+              </p>
+            </div>
+          </div>
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">📡</span>
+              <span>EventSource (SSE)</span>
+            </div>
+            <div class="comparison-content">
+              <ul>
+                <li><strong>✅</strong> Push automático del servidor</li>
+                <li><strong>✅</strong> Eficiente para tiempo real</li>
+                <li><strong>✅</strong> Reconexión automática</li>
+                <li><strong>❌</strong> Solo servidor → cliente</li>
+                <li><strong>❌</strong> No para mensajería bidireccional</li>
+              </ul>
+              <p style="margin-top: 15px">
+                <strong>Usa para:</strong> Notificaciones, feeds, progreso
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 17: Ejemplo real combinado -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 Ejemplo real: Combinando ambos</h2>
+        <div class="step">
+          <pre>
+// 1. Request-Response para crear tarea
+async function crearTarea(tarea) {
+  const response = await fetch('/api/tareas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(tarea)
+  });
+  
+  const nuevaTarea = await response.json();
+  return nuevaTarea;
+}
+
+// 2. EventSource para recibir progreso en tiempo real
+const eventSource = new EventSource(`/api/tareas/${tareaId}/progreso`);
+
+eventSource.onmessage = (event) => {
+  const progreso = JSON.parse(event.data);
+  actualizarBarraProgreso(progreso.porcentaje);
+  
+  if (progreso.porcentaje === 100) {
+    eventSource.close();
+    mostrarCompletado();
+  }
+};</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 18: Buenas prácticas -->
+      <section class="slide slide-list">
+        <h2 class="slide-title">✅ Buenas prácticas APIs</h2>
+        <div class="content">
+          <div class="step list-item">
+            <div class="number">01</div>
+            <div class="text">
+              <strong>Siempre maneja errores</strong><br />
+              Usa try/catch con async/await, verifica response.ok
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">02</div>
+            <div class="text">
+              <strong>Muestra estados de carga</strong><br />
+              Informa al usuario que algo está pasando
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">03</div>
+            <div class="text">
+              <strong>Cierra conexiones EventSource</strong><br />
+              Usa eventSource.close() cuando ya no las necesites
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">04</div>
+            <div class="text">
+              <strong>Valida datos antes de enviar</strong><br />
+              Evita peticiones innecesarias al servidor
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">05</div>
+            <div class="text">
+              <strong>Usa el método HTTP correcto</strong><br />
+              GET para leer, POST para crear, PUT/PATCH para actualizar
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 19: Resumen -->
+      <section class="slide slide-summary">
+        <h2 class="slide-title">📝 Resumen Sesión 5</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Qué son las APIs REST y métodos HTTP</li>
+              <li>Diferencia entre código síncrono y asíncrono</li>
+              <li>Promesas y async/await en JavaScript</li>
+              <li>fetch() para consumir APIs (GET, POST)</li>
+              <li>Flujo tradicional Request-Response</li>
+              <li>EventSource y Server-Sent Events (SSE)</li>
+              <li>Cuándo usar cada patrón de comunicación</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> CSS moderno y responsive design
+              🎨
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide slide-final"></section>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

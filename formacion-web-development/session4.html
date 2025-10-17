@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+    <style>
+      /* Custom styles para esta sesión - colores verdes */
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">🏗️ SESIÓN 4</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Estructura HTML5 y arquitectura web</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: ¿Qué es HTML5? -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🌐 ¿Qué es HTML5?</h2>
+        <div class="content">
+          <div class="step">
+            <p><strong>HTML</strong> = HyperText Markup Language</p>
+            <p>
+              Es el "esqueleto" de toda página web. Define la
+              <strong>estructura</strong> y el <strong>contenido</strong>.
+            </p>
+          </div>
+          <div class="step">
+            <p><strong>HTML5</strong> es la versión moderna que incluye:</p>
+            <ul>
+              <li>Nuevas etiquetas semánticas (header, nav, section...)</li>
+              <li>Soporte nativo para audio y video</li>
+              <li>APIs modernas (geolocalización, canvas, storage...)</li>
+              <li>Mejor accesibilidad</li>
+            </ul>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Analogía:</strong>
+              HTML es como el plano arquitectónico de una casa
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Estructura básica HTML5 -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📋 Estructura básica HTML5</h2>
+        <div class="step">
+          <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Mi Página Web&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hola Mundo&lt;/h1&gt;
+    &lt;p&gt;Este es mi primer documento HTML5&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Partes esenciales:</strong><br />
+            • <code>&lt;!DOCTYPE html&gt;</code> = Declara HTML5<br />
+            • <code>&lt;html&gt;</code> = Contenedor raíz<br />
+            • <code>&lt;head&gt;</code> = Metadatos (no se ve)<br />
+            • <code>&lt;body&gt;</code> = Contenido visible
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: El <head> en detalle -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🧠 El &lt;head&gt; en detalle</h2>
+        <div class="step">
+          <pre>
+&lt;head&gt;
+  &lt;!-- Codificación de caracteres --&gt;
+  &lt;meta charset="UTF-8"&gt;
+  
+  &lt;!-- Responsive design --&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  
+  &lt;!-- SEO --&gt;
+  &lt;meta name="description" content="Descripción de mi web"&gt;
+  &lt;meta name="keywords" content="web, html, desarrollo"&gt;
+  
+  &lt;!-- Título (aparece en la pestaña) --&gt;
+  &lt;title&gt;Mi Sitio Web&lt;/title&gt;
+  
+  &lt;!-- Favicon --&gt;
+  &lt;link rel="icon" href="favicon.ico"&gt;
+&lt;/head&gt;</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 5: Etiquetas semánticas HTML5 -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🏷️ Etiquetas semánticas HTML5</h2>
+        <div class="step">
+          <pre>
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;nav&gt;
+      &lt;!-- Menú de navegación --&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+  
+  &lt;main&gt;
+    &lt;section&gt;
+      &lt;article&gt;
+        &lt;h2&gt;Título del artículo&lt;/h2&gt;
+        &lt;p&gt;Contenido...&lt;/p&gt;
+      &lt;/article&gt;
+    &lt;/section&gt;
+    
+    &lt;aside&gt;
+      &lt;!-- Barra lateral --&gt;
+    &lt;/aside&gt;
+  &lt;/main&gt;
+  
+  &lt;footer&gt;
+    &lt;!-- Pie de página --&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 6: Inyectar CSS - 3 formas -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🎨 3 formas de inyectar CSS</h2>
+        <div class="content">
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              1️⃣ CSS Inline (en el elemento)
+            </h3>
+            <p>
+              <strong>Uso:</strong> Estilos muy específicos, casos excepcionales
+            </p>
+            <p><strong>❌ No recomendado</strong> para uso general</p>
+          </div>
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              2️⃣ CSS Interno (en el &lt;head&gt;)
+            </h3>
+            <p><strong>Uso:</strong> Estilos específicos de una página</p>
+            <p><strong>✅ OK</strong> para páginas únicas o prototipos</p>
+          </div>
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              3️⃣ CSS Externo (archivo .css)
+            </h3>
+            <p>
+              <strong>Uso:</strong> Estilos compartidos por múltiples páginas
+            </p>
+            <p><strong>✅✅ RECOMENDADO</strong> para proyectos reales</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: CSS Inline -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎨 CSS Inline (nivel elemento)</h2>
+        <div class="step">
+          <pre>
+&lt;!-- CSS directamente en el atributo style --&gt;
+&lt;h1 style="color: blue; font-size: 32px;"&gt;
+  Título azul
+&lt;/h1&gt;
+
+&lt;p style="background: yellow; padding: 10px;"&gt;
+  Párrafo con fondo amarillo
+&lt;/p&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>❌ Problemas:</strong><br />
+            • Difícil de mantener<br />
+            • No reutilizable<br />
+            • Mezcla contenido con presentación<br />
+            <strong>Usa solo en casos muy específicos</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: CSS Interno -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎨 CSS Interno (en &lt;head&gt;)</h2>
+        <div class="step">
+          <pre>
+&lt;head&gt;
+  &lt;style&gt;
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    
+    h1 {
+      color: #10b981;
+      text-align: center;
+    }
+    
+    .destacado {
+      background: yellow;
+      padding: 10px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Título con estilo&lt;/h1&gt;
+  &lt;p class="destacado"&gt;Texto destacado&lt;/p&gt;
+&lt;/body&gt;</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 9: CSS Externo -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎨 CSS Externo (✅ recomendado)</h2>
+        <div class="step">
+          <pre>
+&lt;!-- En el HTML --&gt;
+&lt;head&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+  &lt;link rel="stylesheet" href="css/main.css"&gt;
+&lt;/head&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <pre>
+/* En el archivo styles.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #10b981;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>✅ Ventajas:</strong> Reutilizable, cacheable, organizado,
+            mantenible
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Inyectar JavaScript - 3 formas -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">⚡ 3 formas de inyectar JavaScript</h2>
+        <div class="content">
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              1️⃣ JS Inline (en el elemento)
+            </h3>
+            <p><strong>❌ No recomendado</strong> - Obsoleto y peligroso</p>
+          </div>
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              2️⃣ JS Interno (en &lt;script&gt;)
+            </h3>
+            <p><strong>✅ OK</strong> para scripts pequeños o específicos</p>
+          </div>
+          <div class="step">
+            <h3 style="color: #10b981; margin-bottom: 15px">
+              3️⃣ JS Externo (archivo .js)
+            </h3>
+            <p><strong>✅✅ RECOMENDADO</strong> para proyectos reales</p>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Importante:</strong>
+              Los scripts se colocan al final del &lt;body&gt; o con atributos
+              defer/async
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: JS Inline -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">⚡ JS Inline (❌ evitar)</h2>
+        <div class="step">
+          <pre>
+&lt;!-- NO RECOMENDADO --&gt;
+&lt;button onclick="alert('Hola')"&gt;
+  Haz click
+&lt;/button&gt;
+
+&lt;a href="javascript:void(0)" onclick="hacerAlgo()"&gt;
+  Link con JS inline
+&lt;/a&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>❌ Problemas:</strong><br />
+            • Mezcla HTML con JavaScript<br />
+            • Difícil de mantener y debuggear<br />
+            • Problemas de seguridad (XSS)<br />
+            • No sigue buenas prácticas modernas
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: JS Interno -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">⚡ JS Interno (en &lt;script&gt;)</h2>
+        <div class="step">
+          <pre>
+&lt;body&gt;
+  &lt;button id="miBoton"&gt;Haz click&lt;/button&gt;
+  
+  &lt;!-- Script al final del body --&gt;
+  &lt;script&gt;
+    const boton = document.getElementById('miBoton');
+    
+    boton.addEventListener('click', () => {
+      alert('¡Hola desde JavaScript!');
+    });
+    
+    console.log('Script cargado correctamente');
+  &lt;/script&gt;
+&lt;/body&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>✅ Uso recomendado:</strong> Scripts pequeños,
+            configuración, o código específico de una página
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13: JS Externo -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">⚡ JS Externo (✅ recomendado)</h2>
+        <div class="step">
+          <pre>
+&lt;!-- Opción 1: Al final del body --&gt;
+&lt;body&gt;
+  &lt;h1&gt;Mi contenido&lt;/h1&gt;
+  
+  &lt;script src="script.js"&gt;&lt;/script&gt;
+  &lt;script src="js/main.js"&gt;&lt;/script&gt;
+&lt;/body&gt;</pre
+          >
+        </div>
+        <div class="step">
+          <pre>
+&lt;!-- Opción 2: En el head con defer --&gt;
+&lt;head&gt;
+  &lt;script src="script.js" defer&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;!-- Opción 3: Con async (carga asíncrona) --&gt;
+&lt;head&gt;
+  &lt;script src="analytics.js" async&gt;&lt;/script&gt;
+&lt;/head&gt;</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 14: defer vs async -->
+      <section class="slide slide-comparison">
+        <h2 class="slide-title">⚖️ defer vs async</h2>
+        <div class="comparison-container">
+          <div class="step comparison-side good">
+            <div class="comparison-header">
+              <span class="comparison-icon">✅</span>
+              <span>defer</span>
+            </div>
+            <div class="comparison-content">
+              <pre>&lt;script src="main.js" defer&gt;&lt;/script&gt;</pre>
+              <ul>
+                <li>Descarga en paralelo</li>
+                <li>Ejecuta después del HTML</li>
+                <li>Mantiene el orden</li>
+                <li><strong>✅ Usa este</strong> normalmente</li>
+              </ul>
+            </div>
+          </div>
+          <div class="step comparison-side bad">
+            <div class="comparison-header">
+              <span class="comparison-icon">⚡</span>
+              <span>async</span>
+            </div>
+            <div class="comparison-content">
+              <pre>&lt;script src="analytics.js" async&gt;&lt;/script&gt;</pre>
+              <ul>
+                <li>Descarga en paralelo</li>
+                <li>Ejecuta cuando termina</li>
+                <li>No mantiene orden</li>
+                <li><strong>⚡ Solo</strong> para scripts independientes</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 15: Ejemplo completo -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 Ejemplo completo HTML5</h2>
+        <div class="step">
+          <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Mi Web App&lt;/title&gt;
+    
+    &lt;!-- CSS --&gt;
+    &lt;link rel="stylesheet" href="css/reset.css"&gt;
+    &lt;link rel="stylesheet" href="css/main.css"&gt;
+    
+    &lt;!-- JS con defer --&gt;
+    &lt;script src="js/app.js" defer&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header&gt;
+      &lt;nav&gt;...&lt;/nav&gt;
+    &lt;/header&gt;
+    
+    &lt;main&gt;
+      &lt;section&gt;...&lt;/section&gt;
+    &lt;/main&gt;
+    
+    &lt;footer&gt;...&lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 16: Buenas prácticas -->
+      <section class="slide slide-list">
+        <h2 class="slide-title">✅ Buenas prácticas</h2>
+        <div class="content">
+          <div class="step list-item">
+            <div class="number">01</div>
+            <div class="text">
+              <strong>Separa estructura, estilo y comportamiento</strong><br />
+              HTML para estructura, CSS para estilos, JS para interactividad
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">02</div>
+            <div class="text">
+              <strong>Usa CSS y JS externos</strong><br />
+              Mejor mantenimiento, caché del navegador, reutilización
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">03</div>
+            <div class="text">
+              <strong>Scripts al final o con defer</strong><br />
+              Mejora el tiempo de carga inicial de la página
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">04</div>
+            <div class="text">
+              <strong>Usa etiquetas semánticas</strong><br />
+              Mejora SEO, accesibilidad y legibilidad del código
+            </div>
+          </div>
+          <div class="step list-item">
+            <div class="number">05</div>
+            <div class="text">
+              <strong>Siempre incluye meta viewport</strong><br />
+              Esencial para responsive design en móviles
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 17: Resumen -->
+      <section class="slide slide-summary">
+        <h2 class="slide-title">📝 Resumen Sesión 4</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Estructura básica de HTML5</li>
+              <li>Etiquetas semánticas modernas</li>
+              <li>3 formas de inyectar CSS (inline, interno, externo)</li>
+              <li>
+                3 formas de inyectar JavaScript (inline, interno, externo)
+              </li>
+              <li>Diferencias entre defer y async</li>
+              <li>Buenas prácticas de arquitectura web</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> APIs y comunicación asíncrona 🌐
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide slide-final"></section>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

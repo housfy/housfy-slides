@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+    <style>
+      /* Custom styles para esta sesión - colores rosas */
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">📊 SESIÓN 3</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Objetos y Arrays a fondo</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: .forEach() -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔄 .forEach() - Recorrer sin transformar</h2>
+        <div class="step">
+          <pre>
+const nombres = ["Ana", "Luis", "María"];
+
+// forEach: ejecuta código para cada elemento
+nombres.forEach((nombre) => {
+  console.log(`Hola ${nombre}`);
+});
+
+// Output:
+// Hola Ana
+// Hola Luis
+// Hola María</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Importante:</strong> <code>.forEach()</code> NO devuelve
+            nada, solo ejecuta código
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: .map() -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎨 .map() - Transformar todos los elementos</h2>
+        <div class="step">
+          <pre>
+const precios = [10, 20, 30, 40];
+
+// Aplicar IVA a todos
+const preciosConIVA = precios.map((precio) => {
+  return precio * 1.21;
+});
+
+console.log(preciosConIVA);
+// [12.1, 24.2, 36.3, 48.4]
+
+// Versión corta
+const preciosConIVA = precios.map(precio => precio * 1.21);</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla de oro:</strong> <code>.map()</code> siempre devuelve
+            un array del mismo tamaño
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: .map() con objetos -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📦 .map() con objetos</h2>
+        <div class="step">
+          <pre>
+const usuarios = [
+  { nombre: "Ana", edad: 25 },
+  { nombre: "Luis", edad: 30 },
+  { nombre: "María", edad: 28 }
+];
+
+// Extraer solo los nombres
+const nombres = usuarios.map(usuario => usuario.nombre);
+// ["Ana", "Luis", "María"]
+
+// Crear objetos nuevos
+const usuariosConSaludo = usuarios.map(usuario => {
+  return {
+    nombre: usuario.nombre,
+    mensaje: `Hola ${usuario.nombre}`
+  };
+});</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 5: .filter() -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔍 .filter() - Quedarse solo con algunos</h2>
+        <div class="step">
+          <pre>
+const numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+// Solo los pares
+const pares = numeros.filter(numero => numero % 2 === 0);
+// [2, 4, 6, 8, 10]
+
+// Solo los mayores de 5
+const mayores = numeros.filter(numero => numero > 5);
+// [6, 7, 8, 9, 10]</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla:</strong> <code>.filter()</code> devuelve array con
+            menos o igual elementos
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: .filter() con objetos -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 .filter() con objetos (caso real)</h2>
+        <div class="step">
+          <pre>
+const pedidos = [
+  { id: 1, cliente: "Ana", total: 150, pagado: true },
+  { id: 2, cliente: "Luis", total: 230, pagado: false },
+  { id: 3, cliente: "Marta", total: 89, pagado: true },
+  { id: 4, cliente: "Pedro", total: 320, pagado: false }
+];
+
+// Solo pedidos pagados
+const pagados = pedidos.filter(pedido => pedido.pagado === true);
+
+// Pedidos pendientes de más de 100€
+const pendientesGrandes = pedidos.filter(pedido => {
+  return !pedido.pagado && pedido.total > 100;
+});</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 7: Combinando .filter() y .map() -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔥 Combinando .filter() y .map()</h2>
+        <div class="step">
+          <pre>
+const productos = [
+  { nombre: "Teclado", precio: 50, stock: 5 },
+  { nombre: "Ratón", precio: 25, stock: 0 },
+  { nombre: "Monitor", precio: 200, stock: 3 },
+  { nombre: "Webcam", precio: 75, stock: 0 }
+];
+
+// 1. Filtrar productos en stock
+// 2. Añadir IVA al precio
+const productosDisponibles = productos
+  .filter(producto => producto.stock > 0)
+  .map(producto => {
+    return {
+      nombre: producto.nombre,
+      precioConIVA: producto.precio * 1.21,
+      stock: producto.stock
+    };
+  });</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 8: .reduce() -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">⚡ .reduce() - El método más potente</h2>
+        <div class="step">
+          <pre>
+const numeros = [1, 2, 3, 4, 5];
+
+// Sumar todos
+const suma = numeros.reduce((acumulador, numero) => {
+  return acumulador + numero;
+}, 0); // 0 es el valor inicial
+
+// Explicación paso a paso:
+// Vuelta 1: acumulador=0, numero=1 → devuelve 0+1=1
+// Vuelta 2: acumulador=1, numero=2 → devuelve 1+2=3
+// Vuelta 3: acumulador=3, numero=3 → devuelve 3+3=6
+// Vuelta 4: acumulador=6, numero=4 → devuelve 6+4=10
+// Vuelta 5: acumulador=10, numero=5 → devuelve 10+5=15</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 9: .reduce() casos reales -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">💰 .reduce() casos reales</h2>
+        <div class="step">
+          <pre>
+const pedidos = [
+  { cliente: "Ana", total: 150 },
+  { cliente: "Luis", total: 230 },
+  { cliente: "Marta", total: 89 }
+];
+
+// Calcular total facturado
+const totalFacturado = pedidos.reduce((suma, pedido) => {
+  return suma + pedido.total;
+}, 0);
+// 469
+
+// Encontrar el pedido más alto
+const pedidoMax = pedidos.reduce((max, pedido) => {
+  return pedido.total > max.total ? pedido : max;
+});</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 10: Destructuring de objetos -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📤 Destructuring de objetos</h2>
+        <div class="step">
+          <pre>
+// Sin destructuring
+const usuario = { nombre: "Ana", edad: 25, ciudad: "Madrid" };
+const nombre = usuario.nombre;
+const edad = usuario.edad;
+
+// Con destructuring (más limpio)
+const { nombre, edad } = usuario;
+
+// Con renombrado
+const { nombre: nombreUsuario } = usuario;
+
+// En parámetros de función
+const saludar = ({ nombre, edad }) => {
+  return `Hola ${nombre}, tienes ${edad} años`;
+};
+saludar(usuario);</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 11: Spread operator -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🌊 Spread operator (...)</h2>
+        <div class="step">
+          <pre>
+// Combinar arrays
+const array1 = [1, 2, 3];
+const array2 = [4, 5, 6];
+const combinado = [...array1, ...array2];
+// [1, 2, 3, 4, 5, 6]
+
+// Copiar y añadir
+const original = [1, 2, 3];
+const copia = [...original, 4, 5];
+// [1, 2, 3, 4, 5]
+
+// Combinar objetos
+const persona = { nombre: "Ana", edad: 25 };
+const empleado = { ...persona, puesto: "Developer" };
+// { nombre: "Ana", edad: 25, puesto: "Developer" }</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 12: Spread en n8n -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 Spread en n8n (muy útil)</h2>
+        <div class="step">
+          <pre>
+// Añadir campos a objetos existentes
+const contactos = [
+  { nombre: "Ana", email: "ana@test.com" },
+  { nombre: "Luis", email: "luis@test.com" }
+];
+
+const contactosEnriquecidos = contactos.map(contacto => {
+  return {
+    ...contacto,
+    fechaImportacion: new Date(),
+    origen: "API"
+  };
+});
+
+// Resultado:
+// [
+//   { nombre: "Ana", email: "ana@test.com", 
+//     fechaImportacion: ..., origen: "API" },
+//   { nombre: "Luis", email: "luis@test.com", 
+//     fechaImportacion: ..., origen: "API" }
+// ]</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 13: Resumen -->
+      <section class="slide slide-summary">
+        <h2 class="slide-title">📝 Resumen Sesión 3</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>.map() - transformar arrays</li>
+              <li>.filter() - filtrar elementos</li>
+              <li>.reduce() - reducir a un valor</li>
+              <li>Destructuring y spread operator</li>
+              <li>Encadenar métodos para transformaciones complejas</li>
+              <li>Limpiar y normalizar datos en n8n</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> Estructura HTML5 y arquitectura
+              web 🏗️
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="slide slide-final"></section>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>

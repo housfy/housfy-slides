@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+    <style>
+      /* Custom styles para esta sesión - colores morados */
+    </style>
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">🛠️ SESIÓN 2</h1>
+        </div>
+        <div class="step">
+          <p class="subtitle">Funciones y scope</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: ¿Qué es una función? -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 ¿Qué es una función?</h2>
+        <div class="step">
+          <div class="explanation">
+            <strong>Definición simple:</strong> Una "receta" que puedes
+            reutilizar
+          </div>
+        </div>
+        <div class="step">
+          <pre>
+// Sin función (repetitivo)
+const precio1ConIVA = 100 * 1.21;
+const precio2ConIVA = 50 * 1.21;
+const precio3ConIVA = 200 * 1.21;
+
+// Con función (reutilizable)
+function calcularConIVA(precio) {
+  return precio * 1.21;
+}
+
+const precio1ConIVA = calcularConIVA(100);
+const precio2ConIVA = calcularConIVA(50);
+const precio3ConIVA = calcularConIVA(200);</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 3: Anatomía de una función -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔬 Anatomía de una función</h2>
+        <div class="step">
+          <pre>
+function nombreFuncion(parametro1, parametro2) {
+  // Código que hace cosas
+  const resultado = parametro1 + parametro2;
+  return resultado;
+}
+
+// Usar la función
+const suma = nombreFuncion(5, 3); // suma = 8</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Partes:</strong><br />
+            • <code>function</code> = palabra clave<br />
+            • <code>nombreFuncion</code> = nombre descriptivo<br />
+            • <code>(parametros)</code> = datos que recibe<br />
+            • <code>return</code> = resultado que devuelve
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Funciones flecha -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">➡️ Funciones flecha (arrow functions)</h2>
+        <div class="step">
+          <pre>
+// Función tradicional
+function sumar(a, b) {
+  return a + b;
+}
+
+// Función flecha (moderna)
+const sumar = (a, b) => {
+  return a + b;
+};
+
+// Función flecha corta (sin llaves ni return)
+const sumar = (a, b) => a + b;
+
+// Si solo hay 1 parámetro, puedes omitir paréntesis
+const duplicar = x => x * 2;</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>En n8n:</strong> Verás mucho las funciones flecha en
+            ejemplos
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Comparación de estilos -->
+      <section class="slide slide-table">
+        <h2 class="slide-title">📊 Comparación de estilos</h2>
+        <div class="step">
+          <table>
+            <thead>
+              <tr>
+                <th>Tradicional</th>
+                <th>Flecha</th>
+                <th>Flecha corta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>function suma(a,b) { return a+b; }</code></td>
+                <td><code>const suma = (a,b) => { return a+b; }</code></td>
+                <td><code>const suma = (a,b) => a+b;</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="step">
+          <div style="margin-top: 30px; font-size: 1.3em">
+            <strong>¿Cuál usar?</strong><br />
+            • Ambas funcionan igual en n8n<br />
+            • Flecha corta es más legible para funciones simples<br />
+            • Tradicional es más clara si eres principiante
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Parámetros con valores por defecto -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎛️ Parámetros y valores por defecto</h2>
+        <div class="step">
+          <pre>
+// Sin valor por defecto
+const saludar = (nombre) => {
+  return `Hola ${nombre}`;
+};
+saludar(); // "Hola undefined" ❌
+
+// Con valor por defecto
+const saludar = (nombre = "Usuario") => {
+  return `Hola ${nombre}`;
+};
+saludar();           // "Hola Usuario" ✅
+saludar("María");    // "Hola María" ✅</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 7: Múltiples parámetros -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🔢 Múltiples parámetros</h2>
+        <div class="step">
+          <pre>
+// Calcular precio final con descuento e IVA
+const calcularPrecioFinal = (precioBase, descuento, iva) => {
+  const conDescuento = precioBase - descuento;
+  const conIVA = conDescuento * (1 + iva);
+  return conIVA;
+};
+
+const precioFinal = calcularPrecioFinal(100, 20, 0.21);
+// 100 - 20 = 80
+// 80 * 1.21 = 96.8</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 8: Return múltiple -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">📦 Return múltiple (objeto)</h2>
+        <div class="step">
+          <pre>
+// Devolver varios valores
+const analizarPedido = (total) => {
+  const iva = total * 0.21;
+  const sinIVA = total - iva;
+  
+  return {
+    total: total,
+    iva: iva,
+    sinIVA: sinIVA
+  };
+};
+
+const resultado = analizarPedido(121);
+// { total: 121, iva: 25.41, sinIVA: 95.59 }</pre
+          >
+        </div>
+      </section>
+
+      <!-- Slide 9: Scope -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎯 Scope (alcance de variables)</h2>
+        <div class="step">
+          <pre>
+const global = "Soy global"; // ✅ Accesible en todas partes
+
+function miFuncion() {
+  const local = "Soy local"; // ✅ Solo existe aquí dentro
+  console.log(global);  // ✅ Funciona
+  console.log(local);   // ✅ Funciona
+}
+
+console.log(global);    // ✅ Funciona
+console.log(local);     // ❌ ERROR: local no existe aquí</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Regla:</strong> Las variables declaradas dentro de una
+            función solo existen ahí
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Funciones como parámetros -->
+      <section class="slide slide-code">
+        <h2 class="slide-title">🎭 Funciones como parámetros</h2>
+        <div class="step">
+          <pre>
+// Función que recibe otra función
+const aplicarOperacion = (numero, operacion) => {
+  return operacion(numero);
+};
+
+const duplicar = x => x * 2;
+const triplicar = x => x * 3;
+
+console.log(aplicarOperacion(5, duplicar));   // 10
+console.log(aplicarOperacion(5, triplicar));  // 15</pre
+          >
+        </div>
+        <div class="step">
+          <div class="explanation">
+            <strong>Preview:</strong> Esto es la base de <code>.map()</code>,
+            <code>.filter()</code> (próxima sesión)
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Resumen -->
+      <section class="slide slide-summary">
+        <h2 class="slide-title">📝 Resumen Sesión 2</h2>
+        <div class="step">
+          <div class="summary-box">
+            <h3>Has aprendido:</h3>
+            <ul>
+              <li>Crear funciones (tradicionales y flecha)</li>
+              <li>Parámetros y return</li>
+              <li>Scope (alcance de variables)</li>
+              <li>Reutilizar código eficientemente</li>
+              <li>Closures y funciones como parámetros</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.2em">
+              <strong>Próxima sesión:</strong> Arrays y objetos a fondo (map,
+              filter, reduce) 🚀
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
