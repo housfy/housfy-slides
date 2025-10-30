@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- El head se inyecta automáticamente desde script.js -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../slide-styles.css" />
+  </head>
+  <body>
+    <div id="slides-container">
+      <!-- Slide 1: Portada -->
+      <section class="slide slide-cover active">
+        <div class="step visible">
+          <h1 class="slide-title">⚡️ AI Development Day</h1>
+        </div>
+        <p class="subtitle">Sesión 3: Cursor 2.0 & Retos</p>
+      </section>
+
+      <!-- Slide 2: Intro Caso de Uso -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🔍 Caso de uso: Code Review Profundo</h2>
+        <div class="content">
+          <div class="step">
+            <p>
+              <strong>El desafío:</strong> Revisar un Pull Request completo de
+              100+ cambios en múltiples archivos.
+            </p>
+          </div>
+          <div class="step">
+            <p>
+              <strong>La solución:</strong> Usar Cursor Agent + Background mode
+              para hacer una revisión profunda automatizada.
+            </p>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 La idea no es que lo hagan así:</strong>
+              Es que abran la mente a los MUCHOS casos de uso que Cursor puede
+              resolver. Este es solo uno de cientos.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Paso 1 - Preparación -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">📋 Paso 1: Preparación del contexto</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/revisioncodigo1.png" alt="Preparación contexto" />
+        </div>
+      </section>
+
+      <!-- Slide 4: Paso 2 - Ejecución -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">⚙️ Paso 2: Ejecución de la revisión</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/revisioncodigo2.png" />
+        </div>
+      </section>
+
+      <!-- Slide 6: Portada Cursor 2.0 -->
+      <section class="slide slide-cover">
+        <div class="step visible">
+          <h1 class="slide-title">⚡️ Cursor 2.0</h1>
+        </div>
+        <p class="subtitle">Lo nuevo que NO te puedes perder</p>
+      </section>
+
+      <!-- Slide 7: Video -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🎬 Mira el video oficial</h2>
+        <div
+          class="step visible"
+          style="flex: 1; display: flex; flex-direction: column"
+        >
+          <div class="video-container">
+            <video
+              controls
+              style="width: 100%; height: 100%; object-fit: contain"
+            >
+              <source
+                src="https://cdn.sanity.io/files/2hv88549/production/d0c0045982c4bb6f27ace8b99970ee00f94a25a7.mp4"
+                type="video/mp4"
+              />
+              Tu navegador no soporta video.
+              <a
+                href="https://cdn.sanity.io/files/2hv88549/production/d0c0045982c4bb6f27ace8b99970ee00f94a25a7.mp4"
+                target="_blank"
+                >Ver video</a
+              >
+            </video>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Composer Model -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">🎵 Composer - Nuevo modelo propio</h2>
+        <div class="step visible image-placeholder">
+          <img
+            src="https://cdn.sanity.io/images/2hv88549/production/0d97966c0ed3d76814f7e129b4a39b6fdfe4852b-2400x1350.png?auto=format"
+          />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Generación de código más rápida y precisa
+        </div>
+      </section>
+
+      <!-- Slide 9: Agentes UI -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">🤖 Nueva interfaz de Agentes</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/agentinterface.png" />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Control más intuitivo y visual de múltiples agentes
+        </div>
+      </section>
+
+      <!-- Slide 10: Worktrees -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">🌳 Multiagentes con Worktrees</h2>
+        <div class="step visible image-placeholder">
+          <img
+            src="https://cursor.com/docs-static/images/worktrees/worktree-dropdown.png"
+          />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Múltiples agentes trabajando en ramas distintas simultáneamente
+        </div>
+      </section>
+
+      <!-- Slide 11: PR Review -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">✅ Revisión de código que ha hecho el Agent</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/diffreview.png" />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Ve los cambios en modo diff (como en una PR)
+        </div>
+      </section>
+
+      <!-- Slide 12: Browser Embebido -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">🌐 Navegador embebido</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/embedbrowser.png" />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Navega, scrappy y testea sin salir del editor
+        </div>
+      </section>
+
+      <!-- Slide 13: Voice Mode -->
+      <section class="slide slide-image">
+        <h2 class="slide-title">🎤 Modo de voz</h2>
+        <div class="step visible image-placeholder">
+          <img src="./assets/modovoz.png" />
+        </div>
+        <div
+          class="step"
+          style="text-align: center; font-size: 1.3em; margin-top: 20px"
+        >
+          Dale instrucciones a Cursor con tu voz
+        </div>
+      </section>
+
+      <!-- Slide 14: Retos Consolidados -->
+      <section class="slide slide-content">
+        <h2 class="slide-title">🎯 Retos para hoy y next week</h2>
+        <div class="content">
+          <div class="step challenge-box">
+            <div class="challenge-title">🌐 Reto 1: Browser Embebido</div>
+            <div class="challenge-description">
+              <strong>Equipo Frontend:</strong> Prueba el browser al máximo.
+            </div>
+            <p style="margin-top: 10px; font-size: 1em; color: #667eea">
+              🏆 Explica tu experiencia en el próximo AI Development Day
+            </p>
+          </div>
+          <div class="step challenge-box">
+            <div class="challenge-title">
+              🌳 Reto 2: Worktrees & Multiagentes
+            </div>
+            <div class="challenge-description">
+              <strong>Alguien valiente:</strong> Usa worktrees para que
+              múltiples agentes trabajen en paralelo (refactoring, tests, docs)
+            </div>
+            <p style="margin-top: 10px; font-size: 1em; color: #667eea">
+              🏆 Explica qué aprendiste sobre productividad paralela en el
+              próximo AI Development Day
+            </p>
+          </div>
+          <div class="step">
+            <div class="highlight-box">
+              <strong>💡 Tip:</strong> Puedes trabajar en equipo. Si lo haces,
+              ambos explicáis juntos 🤝
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 15: Final -->
+      <section class="slide slide-final"></section>
+    </div>
+
+    <script src="../script.js"></script>
+
+    <style>
+      .video-container {
+        width: 100%;
+        height: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .slide-image {
+        background: linear-gradient(
+          135deg,
+          #11aefa 0%,
+          #0099cc 100%
+        ) !important;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .slide-image .slide-title {
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .image-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 70%;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        color: white;
+        font-size: 2em;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+      }
+
+      .image-placeholder img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 15px;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        flex: 1;
+      }
+
+      .feature-item {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 15px;
+        border-left: 5px solid #11aefa;
+        text-align: center;
+      }
+
+      .feature-icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .feature-title {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: #11aefa;
+        margin-bottom: 10px;
+      }
+
+      .feature-description {
+        font-size: 0.95em;
+        color: #555;
+        line-height: 1.5;
+      }
+
+      .challenge-box {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border-left: 5px solid #11aefa;
+      }
+
+      .challenge-title {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #11aefa;
+        margin-bottom: 15px;
+      }
+
+      .challenge-description {
+        font-size: 1.1em;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>
